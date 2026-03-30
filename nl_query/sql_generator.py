@@ -49,11 +49,11 @@ class QueryResult:
 
 def get_schema_description() -> str:
     """
-    Read current database schema dynamically.
-    TODO 3 from /plan-eng-review: inject schema dynamically via information_schema
-    so the LLM always sees the real structure, even after changes.
+    Read current database schema dynamically + sample data.
+    Injects both structure AND real data examples so the LLM
+    understands how marca/modelo/versao/campo are stored.
     """
-    query = text("""
+    schema_query = text("""
         SELECT table_name, column_name, data_type
         FROM information_schema.columns
         WHERE table_schema = 'public'
@@ -61,11 +61,10 @@ def get_schema_description() -> str:
     """)
 
     with engine.connect() as conn:
-        result = conn.execute(query)
+        result = conn.execute(schema_query)
         rows = result.fetchall()
 
     if not rows:
-        # Fallback to hardcoded schema if DB not initialized
         return _fallback_schema()
 
     schema_lines = []
@@ -75,6 +74,35 @@ def get_schema_description() -> str:
             schema_lines.append(f"\nTable: {table}")
             current_table = table
         schema_lines.append(f"  - {column} ({dtype})")
+
+    # Add sample data so LLM understands the data model
+    try:
+        with engine.connect() as conn:
+            # Sample vehicle_spec entries
+            sample_specs = conn.execute(text("""
+                SELECT DISTINCT marca, modelo, versao FROM vehicle_spec
+                WHERE mercado = 'BR' ORDER BY marca, modelo LIMIT 10
+            """)).fetchall()
+
+            sample_campos = conn.execute(text("""
+                SELECT DISTINCT campo FROM vehicle_spec ORDER BY campo LIMIT 15
+            """)).fetchall()
+
+            schema_lines.append("\n\nSAMPLE DATA (vehicle_spec):")
+            schema_lines.append("marca/modelo/versao combinations:")
+            for row in sample_specs:
+                schema_lines.append(f"  - marca='{row[0]}', modelo='{row[1]}', versao='{row[2]}'")
+            schema_lines.append("IMPORTANT: 'modelo' and 'versao' are SEPARATE columns.")
+            schema_lines.append("Example: 'Ranger Raptor' = modelo='Ranger' AND versao='Raptor'")
+            schema_lines.append("Example: 'Hilux SRX' = modelo='Hilux' AND versao='SRX'")
+
+            schema_lines.append("\ncampo values (each is a row, not a column):")
+            for row in sample_campos:
+                schema_lines.append(f"  - '{row[0]}'")
+            schema_lines.append("IMPORTANT: specs are stored as rows (EAV model).")
+            schema_lines.append("Each spec is a separate row with campo='potencia', valor='400', unidade='cv'.")
+    except Exception:
+        pass
 
     return "\n".join(schema_lines)
 
