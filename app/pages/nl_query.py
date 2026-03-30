@@ -10,9 +10,11 @@ import streamlit as st
 import pandas as pd
 
 # Try to import the real query engine; fall back to demo mode
+# Requires both sqlalchemy (DB) AND OPENAI_API_KEY (LLM) to be live
+import os
 try:
     from nl_query.sql_generator import execute_query, sanitize_sql
-    LIVE_MODE = True
+    LIVE_MODE = bool(os.getenv("OPENAI_API_KEY")) and bool(os.getenv("DATABASE_URL"))
 except Exception:
     LIVE_MODE = False
 

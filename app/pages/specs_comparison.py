@@ -10,10 +10,11 @@ import streamlit as st
 import pandas as pd
 
 # Try to import DB connection for live data
+import os
 try:
     from sqlalchemy import text
     from db.connection import engine
-    LIVE_MODE = True
+    LIVE_MODE = bool(os.getenv("DATABASE_URL"))
 except Exception:
     LIVE_MODE = False
 

@@ -17,6 +17,7 @@ import pandas as pd
 from datetime import date
 
 # Try to import real modules
+import os
 try:
     from bridge.template_generator import (
         TemplateInput,
@@ -26,7 +27,7 @@ try:
         _fallback_template,
         review_template,
     )
-    BRIDGE_AVAILABLE = True
+    BRIDGE_AVAILABLE = bool(os.getenv("DATABASE_URL")) and bool(os.getenv("OPENAI_API_KEY"))
 except Exception:
     BRIDGE_AVAILABLE = False
 

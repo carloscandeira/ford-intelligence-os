@@ -11,10 +11,11 @@ from datetime import date, datetime
 from typing import Optional
 
 # Try to import real modules
+import os
 try:
     from sqlalchemy import text
     from db.connection import engine
-    DB_AVAILABLE = True
+    DB_AVAILABLE = bool(os.getenv("DATABASE_URL"))
 except Exception:
     DB_AVAILABLE = False
 
