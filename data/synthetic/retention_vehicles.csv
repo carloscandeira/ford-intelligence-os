@@ -1,0 +1,101 @@
+vehicle_id,cliente_id,modelo,versao,ano_fabricacao,data_venda,concessionaria_id,ultima_visita_paga,ultima_visita_qualquer,tipo_ultimo_servico,qtd_visitas_pagas_2_anos,km_estimado,connected_vehicle_available,sinal_falha_ativo,km_real_odometro,lgpd_consent
+VH-0001,CL-0001,Ranger,Limited,2016,2016-10-08,MG001,,2024-06-27,pago,0,101530,false,false,,false
+VH-0002,CL-0002,Bronco Sport,Wildtrak,2016,2016-01-31,MG001,,2025-02-11,pago,0,71237,false,false,,true
+VH-0003,CL-0003,Bronco Sport,Wildtrak,2019,2020-04-04,SP002,2023-01-14,2025-03-16,recall,3,60392,false,false,,true
+VH-0004,CL-0004,Territory,SEL,2017,2017-04-05,RJ001,2025-01-05,2024-09-12,recall,6,39671,false,false,,true
+VH-0005,CL-0005,Bronco Sport,Wildtrak,2017,2018-07-20,SP003,,2025-01-28,recall,0,86070,false,false,,true
+VH-0006,CL-0006,Ranger,Limited,2016,2017-11-08,SP001,,2026-02-17,garantia,0,15458,false,false,,true
+VH-0007,CL-0007,Territory,Titanium,2023,2024-10-12,SP001,2023-11-30,2024-12-16,garantia,6,32460,true,false,32506,true
+VH-0008,CL-0008,Ranger,XL,2018,2019-04-19,SP001,2026-08-03,2025-04-14,recall,4,47504,false,false,,true
+VH-0009,CL-0009,Ranger,Raptor,2021,2022-02-15,SP003,,2025-03-11,pago,0,79341,false,false,,true
+VH-0010,CL-0010,Maverick,Lariat,2022,2023-10-21,MG001,2024-06-26,2026-03-28,pago,3,102647,true,false,102517,true
+VH-0011,CL-0011,Ranger,XL,2018,2019-06-06,RJ001,2023-04-07,2024-05-10,pago,2,87240,false,false,,false
+VH-0012,CL-0012,Bronco Sport,Wildtrak,2022,2023-09-03,MG001,2025-12-19,2025-06-30,recall,5,117824,true,false,118111,false
+VH-0013,CL-0013,Territory,SEL,2017,2017-10-28,MG001,2025-07-18,2024-12-31,recall,1,119799,false,false,,true
+VH-0014,CL-0014,Ranger,Limited,2020,2021-10-16,MG001,2024-02-12,2024-01-02,garantia,3,104943,false,false,,false
+VH-0015,CL-0015,Territory,SEL,2023,2023-01-20,MG001,,2024-06-10,garantia,0,114008,true,false,113595,true
+VH-0016,CL-0016,Maverick,Lariat,2017,2018-06-30,MG001,2023-09-20,2026-05-16,recall,8,26643,false,false,,true
+VH-0017,CL-0017,Ranger,XL,2024,2025-12-07,MG001,,2026-07-13,garantia,0,57296,true,false,56919,true
+VH-0018,CL-0018,Ranger,XL,2019,2019-03-07,SP002,,2024-01-15,recall,0,77603,false,false,,true
+VH-0019,CL-0019,Ranger,Limited,2016,2016-08-22,MG001,,2025-05-02,pago,0,117674,false,false,,true
+VH-0020,CL-0020,Territory,Titanium,2023,2023-08-08,RJ001,2026-03-15,2025-12-26,pago,8,107841,true,false,107774,false
+VH-0021,CL-0021,Bronco Sport,Wildtrak,2023,2023-02-25,SP002,2026-08-16,2025-01-24,pago,2,57772,true,false,57821,false
+VH-0022,CL-0022,Maverick,Lariat,2018,2019-03-09,SP001,,2026-06-26,garantia,0,37742,false,false,,true
+VH-0023,CL-0023,Ranger,Limited,2016,2017-10-29,RJ001,2023-01-31,2025-03-13,pago,2,26798,false,false,,true
+VH-0024,CL-0024,Bronco Sport,Wildtrak,2016,2016-06-17,MG001,2025-03-10,2026-09-23,garantia,5,42388,false,false,,true
+VH-0025,CL-0025,Ranger,XLS,2019,2019-10-31,SP001,,2025-10-04,pago,0,80914,false,false,,true
+VH-0026,CL-0026,Ranger,Raptor,2016,2017-08-21,SP002,2025-12-23,2024-05-20,pago,3,71562,false,false,,false
+VH-0027,CL-0027,Ranger,Limited,2019,2020-02-18,SP001,,2024-06-16,recall,0,37271,false,false,,true
+VH-0028,CL-0028,Bronco Sport,Wildtrak,2025,2025-10-17,SP003,2024-06-18,2026-07-25,recall,4,98872,true,false,98695,false
+VH-0029,CL-0029,Ranger,Limited,2016,2017-04-14,SP003,2026-02-27,2024-09-28,pago,2,75468,false,false,,true
+VH-0030,CL-0030,Territory,SEL,2017,2017-09-08,MG001,2023-11-20,2024-01-17,recall,8,97214,false,false,,true
+VH-0031,CL-0031,Territory,Titanium,2017,2017-05-18,SP003,,2025-07-31,pago,0,102310,false,false,,true
+VH-0032,CL-0032,Ranger,XL,2021,2021-07-28,RJ001,2024-06-24,2025-07-20,garantia,8,115900,false,false,,false
+VH-0033,CL-0033,Ranger,Raptor,2016,2016-12-07,RJ001,2026-07-28,2024-01-20,pago,5,102154,false,false,,true
+VH-0034,CL-0034,Ranger,Limited,2017,2018-12-09,RJ001,2026-01-22,2024-09-18,garantia,1,81350,false,false,,true
+VH-0035,CL-0035,Ranger,Raptor,2020,2021-01-08,SP001,2023-03-23,2025-12-25,pago,6,94399,false,false,,true
+VH-0036,CL-0036,Bronco Sport,Wildtrak,2025,2025-03-21,SP003,2024-04-29,2026-04-23,pago,3,59040,false,false,,true
+VH-0037,CL-0037,Ranger,XL,2020,2020-06-12,SP002,2023-08-10,2026-07-31,pago,7,117537,false,false,,true
+VH-0038,CL-0038,Territory,SEL,2020,2020-08-21,SP003,,2024-05-22,recall,0,30313,false,false,,true
+VH-0039,CL-0039,Territory,Titanium,2021,2022-10-19,SP003,2026-10-23,2024-12-31,pago,6,20118,false,false,,true
+VH-0040,CL-0040,Territory,Titanium,2016,2016-04-21,SP001,2024-12-08,2026-02-27,garantia,6,84457,false,false,,true
+VH-0041,CL-0041,Ranger,XL,2020,2020-02-15,SP003,2023-01-04,2025-10-04,garantia,4,61531,false,false,,false
+VH-0042,CL-0042,Ranger,Limited,2020,2021-06-03,SP003,,2024-09-17,garantia,0,47753,false,false,,true
+VH-0043,CL-0043,Ranger,XL,2022,2023-11-12,SP003,2026-10-19,2025-03-06,recall,3,79593,true,false,79533,false
+VH-0044,CL-0044,Territory,SEL,2023,2024-03-28,MG001,2024-03-13,2025-11-17,recall,8,27241,true,false,26836,true
+VH-0045,CL-0045,Ranger,XL,2020,2020-08-18,MG001,2023-10-29,2024-05-29,pago,1,37092,false,false,,true
+VH-0046,CL-0046,Maverick,Lariat,2022,2023-10-07,SP001,2026-11-27,2024-08-06,garantia,7,57383,false,false,,true
+VH-0047,CL-0047,Bronco Sport,Wildtrak,2019,2019-06-30,SP001,2026-11-26,2026-07-23,pago,8,78060,false,false,,true
+VH-0048,CL-0048,Ranger,XLS,2023,2024-11-14,MG001,2026-02-18,2026-07-02,garantia,6,85301,true,true,85719,true
+VH-0049,CL-0049,Ranger,XLS,2023,2024-04-05,SP002,,2025-07-16,pago,0,115082,true,false,115032,true
+VH-0050,CL-0050,Ranger,Limited,2020,2020-08-28,SP002,,2025-04-18,garantia,0,75798,false,false,,false
+VH-0051,CL-0051,Bronco Sport,Wildtrak,2018,2019-12-25,RJ001,,2026-05-01,garantia,0,58424,false,false,,true
+VH-0052,CL-0052,Ranger,Raptor,2019,2020-03-06,SP003,2026-04-11,2025-09-03,recall,1,54857,false,false,,true
+VH-0053,CL-0053,Bronco Sport,Wildtrak,2022,2023-07-06,RJ001,2026-01-23,2025-11-19,garantia,4,33760,false,false,,true
+VH-0054,CL-0054,Bronco Sport,Wildtrak,2018,2019-04-24,SP001,2026-06-28,2024-06-20,garantia,1,82580,false,false,,true
+VH-0055,CL-0055,Bronco Sport,Wildtrak,2018,2019-04-18,RJ001,,2025-10-31,garantia,0,54689,false,false,,true
+VH-0056,CL-0056,Territory,SEL,2022,2022-10-12,SP003,2025-05-13,2025-04-04,pago,5,66644,false,false,,true
+VH-0057,CL-0057,Ranger,Limited,2016,2016-02-01,RJ001,2024-02-13,2024-08-22,recall,1,24973,false,false,,true
+VH-0058,CL-0058,Ranger,XL,2023,2024-12-17,SP002,,2025-09-29,garantia,0,26992,true,true,26602,true
+VH-0059,CL-0059,Ranger,Raptor,2020,2021-08-12,SP002,2025-02-07,2024-07-27,recall,7,30995,false,false,,false
+VH-0060,CL-0060,Territory,Titanium,2025,2025-03-03,SP003,2026-03-05,2024-01-26,garantia,1,74827,true,false,75196,true
+VH-0061,CL-0061,Bronco Sport,Wildtrak,2023,2023-04-19,SP003,2025-01-11,2026-09-17,recall,8,25052,true,false,25028,true
+VH-0062,CL-0062,Bronco Sport,Wildtrak,2025,2025-05-18,RJ001,,2026-02-15,pago,0,113885,true,false,113729,true
+VH-0063,CL-0063,Ranger,Raptor,2023,2023-11-29,SP003,,2024-01-21,pago,0,51507,true,false,51536,true
+VH-0064,CL-0064,Ranger,XL,2017,2017-09-05,RJ001,2025-09-27,2026-07-06,recall,4,67402,false,false,,true
+VH-0065,CL-0065,Ranger,Raptor,2017,2017-10-29,MG001,,2026-01-25,recall,0,36890,false,false,,true
+VH-0066,CL-0066,Maverick,Lariat,2024,2025-06-27,SP003,,2025-04-17,recall,0,77140,true,false,76763,true
+VH-0067,CL-0067,Ranger,XL,2021,2021-05-03,SP003,2026-11-14,2026-12-10,pago,3,33361,false,false,,true
+VH-0068,CL-0068,Territory,Titanium,2017,2017-07-18,MG001,,2024-09-16,garantia,0,28519,false,false,,true
+VH-0069,CL-0069,Territory,Titanium,2016,2016-02-25,SP001,2026-11-29,2024-01-26,recall,3,118830,false,false,,true
+VH-0070,CL-0070,Territory,Titanium,2023,2024-05-05,SP001,2024-01-13,2024-04-19,garantia,1,117947,true,false,117602,true
+VH-0071,CL-0071,Ranger,XLS,2025,2025-06-05,MG001,,2025-04-07,pago,0,20525,true,false,20819,true
+VH-0072,CL-0072,Bronco Sport,Wildtrak,2023,2024-03-29,SP001,,2025-03-01,recall,0,61207,true,false,61347,true
+VH-0073,CL-0073,Ranger,XL,2020,2021-11-07,SP002,,2024-01-06,pago,0,27782,false,false,,true
+VH-0074,CL-0074,Bronco Sport,Wildtrak,2023,2024-12-06,SP002,2024-08-19,2025-06-25,pago,1,42762,true,false,43068,true
+VH-0075,CL-0075,Ranger,XL,2022,2022-04-28,SP003,2026-08-19,2025-08-14,garantia,3,113348,false,false,,false
+VH-0076,CL-0076,Maverick,Lariat,2017,2018-04-25,RJ001,2026-12-04,2024-06-13,garantia,7,70597,false,false,,true
+VH-0077,CL-0077,Ranger,Raptor,2022,2022-11-27,SP003,2023-02-22,2024-03-23,pago,2,93381,true,false,93662,true
+VH-0078,CL-0078,Ranger,XLS,2023,2024-06-15,SP003,2024-07-23,2026-04-16,recall,3,62132,true,false,61973,false
+VH-0079,CL-0079,Territory,SEL,2017,2017-06-14,RJ001,,2024-03-16,recall,0,69942,false,false,,true
+VH-0080,CL-0080,Maverick,Lariat,2017,2017-11-19,MG001,,2024-01-03,pago,0,106259,false,false,,true
+VH-0081,CL-0081,Maverick,Lariat,2022,2022-02-25,SP002,,2025-06-30,garantia,0,86609,true,false,86671,true
+VH-0082,CL-0082,Ranger,XLS,2020,2021-03-24,SP002,2025-09-19,2024-11-20,pago,2,87578,false,false,,true
+VH-0083,CL-0083,Territory,Titanium,2024,2024-01-15,SP003,2023-07-10,2026-11-08,pago,4,65482,true,false,65704,false
+VH-0084,CL-0084,Territory,Titanium,2022,2023-05-10,SP002,2024-05-14,2024-05-22,recall,8,23958,true,true,23740,true
+VH-0085,CL-0085,Bronco Sport,Wildtrak,2021,2022-06-04,MG001,,2026-09-29,pago,0,42072,false,false,,true
+VH-0086,CL-0086,Ranger,XLS,2023,2024-07-05,RJ001,2024-11-11,2025-04-23,garantia,7,47176,true,true,47552,true
+VH-0087,CL-0087,Bronco Sport,Wildtrak,2016,2016-11-21,SP002,2026-12-15,2026-10-11,garantia,7,91991,false,false,,true
+VH-0088,CL-0088,Ranger,Raptor,2018,2019-05-30,RJ001,2024-11-10,2024-02-01,garantia,2,18069,false,false,,true
+VH-0089,CL-0089,Ranger,XLS,2022,2023-11-02,SP003,2023-06-03,2026-12-28,garantia,8,49375,true,false,49264,false
+VH-0090,CL-0090,Territory,SEL,2023,2024-07-08,SP001,,2026-06-07,pago,0,35771,true,true,35371,true
+VH-0091,CL-0091,Ranger,Limited,2023,2023-06-20,RJ001,2023-03-01,2024-10-25,garantia,1,109352,false,false,,true
+VH-0092,CL-0092,Ranger,XL,2024,2025-02-25,RJ001,2024-01-04,2024-10-20,pago,3,15350,true,false,15087,true
+VH-0093,CL-0093,Maverick,Lariat,2020,2021-04-15,SP003,,2024-11-19,pago,0,110464,false,false,,true
+VH-0094,CL-0094,Ranger,Limited,2023,2023-12-20,RJ001,2024-09-04,2024-08-06,recall,7,37780,true,false,37522,true
+VH-0095,CL-0095,Bronco Sport,Wildtrak,2025,2025-07-03,SP001,2026-12-03,2026-10-14,pago,5,113794,true,false,114146,true
+VH-0096,CL-0096,Territory,Titanium,2019,2020-09-13,SP002,2024-03-24,2024-07-17,recall,4,37850,false,false,,true
+VH-0097,CL-0097,Ranger,Raptor,2020,2021-03-27,SP003,,2025-10-31,garantia,0,100991,false,false,,false
+VH-0098,CL-0098,Bronco Sport,Wildtrak,2018,2018-07-25,MG001,,2026-10-24,recall,0,119879,false,false,,true
+VH-0099,CL-0099,Territory,Titanium,2018,2018-09-21,SP001,2025-09-13,2026-08-17,recall,5,119084,false,false,,true
+VH-0100,CL-0100,Ranger,Limited,2018,2018-08-20,RJ001,2026-10-13,2024-01-29,recall,7,52942,false,false,,false
