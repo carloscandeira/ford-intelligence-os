@@ -18,6 +18,10 @@ openai>=1.0.0
 
 # Dashboard
 streamlit>=1.30.0
+plotly>=5.0.0
+
+# Scraper
+playwright-stealth>=2.0.0
 
 # Utilities
 rich>=13.0.0
