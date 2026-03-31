@@ -58,6 +58,19 @@ with st.sidebar:
     st.caption("Desafio Ford x Universidade 2026")
     st.caption("Dados: mercado brasileiro")
 
+    # ─── Fontes dos dados ────────────────────────────────
+    st.divider()
+    st.markdown("**Fontes de dados (scraping ao vivo)**")
+    st.markdown("""
+| Marca | Fonte | Status |
+|---|---|---|
+| VW | vw.com.br | ✅ Oficial |
+| Toyota | toyota.com.br | ✅ Oficial |
+| Mitsubishi | mitsubishimotors.com.br | ✅ Oficial |
+| Ford | carrosnaweb.com.br | ⚠️ ford.com.br bloqueia scraping (WAF/403) |
+""")
+    st.caption("ford.com.br usa Cloudflare WAF que bloqueia qualquer automacao. Dados da Ford sao extraidos do carrosnaweb.com.br (ficha tecnica FIPE publica).")
+
 # ─────────────────────────────────────────────────────────────
 # Page routing
 # ─────────────────────────────────────────────────────────────

@@ -141,16 +141,48 @@ def build_system_prompt(schema: str) -> str:
 DATABASE SCHEMA:
 {schema}
 
+CRITICAL — EAV MODEL:
+The table vehicle_spec uses an Entity-Attribute-Value (EAV) model.
+There are NO columns named potencia, torque, motor, etc.
+The columns are: marca, modelo, versao, mercado, campo, valor, unidade, fonte_url, extraido_em.
+Each spec is stored as a ROW where campo='potencia' and valor='397'.
+To get potencia, you filter WHERE campo = 'potencia' and read the valor column.
+NEVER write vs.potencia or vs.torque — those columns DO NOT EXIST.
+
 RULES:
-1. Generate ONLY SELECT statements. Never generate INSERT, UPDATE, DELETE, DROP, CREATE, or ALTER.
-2. Always filter by mercado = 'BR' when querying vehicle_spec.
-3. When comparing brands, use the 'campo' column to match equivalent fields.
-4. Return well-formatted SQL with proper aliases.
-5. If the question is unclear, generate a query that returns the most relevant data.
-6. For comparison questions ("what does X have that Y doesn't"), use set difference (EXCEPT or LEFT JOIN WHERE NULL).
-7. Always include fonte_url and extraido_em in the output for traceability.
-8. Respond ONLY with the SQL query. No explanation. No markdown. No code fences.
-9. Use Portuguese column aliases matching the campo values in the database."""
+1. Generate ONLY SELECT statements.
+2. Always filter by mercado = 'BR'.
+3. The only data columns are: marca, modelo, versao, mercado, campo, valor, unidade, fonte_url, extraido_em, verificado.
+4. To get a specific spec, use WHERE campo = 'potencia' (or torque, motor, etc.) and SELECT valor.
+5. ALWAYS return simple rows. NEVER pivot, crosstab, or create dynamic columns.
+6. Always include fonte_url and extraido_em for traceability.
+7. Respond ONLY with the SQL query. No explanation. No markdown. No code fences.
+8. Use ORDER BY marca, modelo, versao for consistent results.
+
+EXAMPLE — "Qual a potencia da Ranger Raptor?":
+SELECT marca, modelo, versao, valor AS potencia, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE mercado = 'BR' AND campo = 'potencia'
+  AND marca = 'Ford' AND modelo = 'Ranger' AND versao = 'Raptor';
+
+EXAMPLE — "Compare torque do Ranger com Hilux":
+SELECT marca, modelo, versao, valor AS torque, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE mercado = 'BR' AND campo = 'torque'
+  AND ((marca = 'Ford' AND modelo = 'Ranger') OR (marca = 'Toyota' AND modelo = 'Hilux'))
+ORDER BY marca, modelo;
+
+EXAMPLE — "Mostre todas as specs do Ranger Raptor":
+SELECT marca, modelo, versao, campo, valor, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE mercado = 'BR' AND marca = 'Ford' AND modelo = 'Ranger' AND versao = 'Raptor'
+ORDER BY campo;
+
+EXAMPLE — "Qual pickup tem maior capacidade de carga?":
+SELECT marca, modelo, versao, valor AS capacidade_carga, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE mercado = 'BR' AND campo = 'capacidade_carga'
+ORDER BY CAST(REPLACE(valor, '.', '') AS INTEGER) DESC;"""
 
 
 def sanitize_sql(sql: str) -> tuple[bool, str]:
@@ -191,7 +223,7 @@ def generate_sql(question: str) -> str:
             {"role": "user", "content": question},
         ],
         temperature=0,
-        max_tokens=500,
+        max_completion_tokens=500,
     )
 
     sql = response.choices[0].message.content.strip()

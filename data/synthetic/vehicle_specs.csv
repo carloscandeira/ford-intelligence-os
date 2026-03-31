@@ -1,67 +1,81 @@
 marca,modelo,versao,mercado,campo,valor,unidade,fonte_url,extraido_em
-Ford,Ranger,Raptor,BR,potencia,400,cv,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,torque,59.2,kgfm,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,motor,V6 3.0 Biturbo,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,transmissao,Automatica 10 velocidades,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,tracao,4x4,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,suspensao,Fox 2.5 Live Valve,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,capacidade_carga,620,kg,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,entre_eixos,3270,mm,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,comprimento,5381,mm,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,tanque,80,litros,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Raptor,BR,preco_sugerido,449990,BRL,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,potencia,210,cv,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,torque,51,kgfm,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,motor,2.0 Turbo Diesel,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,transmissao,Automatica 6 velocidades,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,tracao,4x4,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,suspensao,Independente dianteira / Rigida traseira,,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,capacidade_carga,785,kg,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,entre_eixos,3270,mm,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,comprimento,5381,mm,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,tanque,80,litros,https://www.ford.com.br/ranger/,2026-03-29
-Ford,Ranger,Limited,BR,preco_sugerido,289990,BRL,https://www.ford.com.br/ranger/,2026-03-29
-Toyota,Hilux,SRX,BR,potencia,204,cv,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,torque,50.9,kgfm,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,motor,2.8 Turbo Diesel,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,transmissao,Automatica 6 velocidades,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,tracao,4x4,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,suspensao,Independente dianteira / Rigida traseira com molas,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,capacidade_carga,720,kg,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,entre_eixos,3085,mm,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,comprimento,5325,mm,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,tanque,80,litros,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,SRX,BR,preco_sugerido,299990,BRL,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,potencia,224,cv,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,torque,55.1,kgfm,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,motor,2.8 Turbo Diesel,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,transmissao,Automatica 6 velocidades,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,tracao,4x4,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,suspensao,Monotube com reservatorio remoto,,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,capacidade_carga,680,kg,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,entre_eixos,3085,mm,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,comprimento,5325,mm,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,tanque,80,litros,https://www.toyota.com.br/hilux/,2026-03-29
-Toyota,Hilux,GR-Sport,BR,preco_sugerido,369990,BRL,https://www.toyota.com.br/hilux/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,potencia,190,cv,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,torque,43.9,kgfm,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,motor,2.4 Turbo Diesel,,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,transmissao,Automatica 6 velocidades,,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,tracao,4x4,,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,suspensao,Independente dianteira / Rigida traseira,,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,capacidade_carga,715,kg,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,entre_eixos,3000,mm,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,comprimento,5305,mm,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,tanque,75,litros,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Mitsubishi,L200 Triton,Savana,BR,preco_sugerido,279990,BRL,https://www.mitsubishi.com.br/l200 triton/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,potencia,258,cv,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,torque,59.1,kgfm,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,motor,V6 3.0 Turbo Diesel,,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,transmissao,Automatica 10 velocidades,,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,tracao,4x4 permanente,,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,suspensao,Independente nas 4 rodas,,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,capacidade_carga,710,kg,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,entre_eixos,3270,mm,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,comprimento,5350,mm,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,tanque,80,litros,https://www.volkswagen.com.br/amarok/,2026-03-29
-Volkswagen,Amarok,Highline V6,BR,preco_sugerido,339990,BRL,https://www.volkswagen.com.br/amarok/,2026-03-29
+Ford,Ranger,Raptor,BR,potencia,397,cv,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Raptor,BR,torque,59.4,kgfm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Raptor,BR,motor,V6 3.0 EcoBoost Gasolina Biturbo,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Raptor,BR,transmissao,Automatica 10 velocidades,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Raptor,BR,tracao,4x4 integral sob demanda,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Raptor,BR,capacidade_carga,736,kg,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Raptor,BR,entre_eixos,3270,mm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Raptor,BR,comprimento,5360,mm,https://carro.blog.br/ficha-tecnica/ford/ford-ranger/ford-ranger-2025/ford-ranger-raptor-3-0-v6-2025-ficha-tecnica-preco-consumo-equipamentos-e-fotos-picape-de-397-cv-para-uso-pesado,2026-03-30
+Ford,Ranger,Raptor,BR,tanque,82,litros,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947,2026-03-30
+Ford,Ranger,Limited,BR,potencia,250,cv,https://garagem360.com.br/ford-ranger-limited-2025-conheca-a-picape-de-aspectos-exclusivos/,2026-03-30
+Ford,Ranger,Limited,BR,torque,61.2,kgfm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882,2026-03-30
+Ford,Ranger,Limited,BR,motor,V6 3.0 Turbo Diesel,,https://garagem360.com.br/ford-ranger-limited-2025-conheca-a-picape-de-aspectos-exclusivos/,2026-03-30
+Ford,Ranger,Limited,BR,transmissao,Automatica 10 velocidades,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882,2026-03-30
+Ford,Ranger,Limited,BR,tracao,4x4 integral temporaria,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882,2026-03-30
+Ford,Ranger,Limited,BR,capacidade_carga,1023,kg,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882,2026-03-30
+Ford,Ranger,Limited,BR,entre_eixos,3270,mm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882,2026-03-30
+Ford,Ranger,Limited,BR,comprimento,5360,mm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882,2026-03-30
+Ford,Ranger,Limited,BR,tanque,80,litros,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882,2026-03-30
+Ford,Ranger,XLS,BR,potencia,170,cv,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,XLS,BR,torque,41.3,kgfm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,XLS,BR,motor,2.0 Turbo Diesel 4 cilindros,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,XLS,BR,transmissao,Automatica 6 velocidades,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,XLS,BR,tracao,4x4 integral temporaria,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,XLS,BR,capacidade_carga,1037,kg,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,XLS,BR,entre_eixos,3270,mm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,XLS,BR,comprimento,5370,mm,https://garagem360.com.br/ford-ranger-xls-2025/,2026-03-30
+Ford,Ranger,XLS,BR,tanque,80,litros,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868,2026-03-30
+Ford,Ranger,Black,BR,potencia,170,cv,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,torque,41.3,kgfm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,motor,2.0 Turbo Diesel 4 cilindros,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,transmissao,Automatica 6 velocidades,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,tracao,4x2 traseira,,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,capacidade_carga,1031,kg,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,entre_eixos,3270,mm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,comprimento,5382,mm,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Ford,Ranger,Black,BR,tanque,80,litros,https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251,2026-03-30
+Toyota,Hilux,SRX,BR,potencia,204,cv,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,torque,50.9,kgfm,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,motor,2.8 Turbo Diesel,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,transmissao,Automatica 6 velocidades,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,tracao,4x4,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,suspensao,Independente dianteira / Rigida traseira com molas,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,capacidade_carga,720,kg,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,entre_eixos,3085,mm,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,comprimento,5325,mm,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,tanque,80,litros,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,SRX,BR,preco_sugerido,299990,BRL,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,potencia,224,cv,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,torque,55.1,kgfm,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,motor,2.8 Turbo Diesel,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,transmissao,Automatica 6 velocidades,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,tracao,4x4,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,suspensao,Monotube com reservatorio remoto,,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,capacidade_carga,680,kg,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,entre_eixos,3085,mm,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,comprimento,5325,mm,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,tanque,80,litros,https://www.toyota.com.br/hilux/,2026-03-30
+Toyota,Hilux,GR-Sport,BR,preco_sugerido,369990,BRL,https://www.toyota.com.br/hilux/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,potencia,190,cv,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,torque,43.9,kgfm,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,motor,2.4 Turbo Diesel,,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,transmissao,Automatica 6 velocidades,,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,tracao,4x4,,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,suspensao,Independente dianteira / Rigida traseira,,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,capacidade_carga,715,kg,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,entre_eixos,3000,mm,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,comprimento,5305,mm,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,tanque,75,litros,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Mitsubishi,L200 Triton,Savana,BR,preco_sugerido,279990,BRL,https://www.mitsubishi.com.br/l200 triton/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,potencia,258,cv,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,torque,59.1,kgfm,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,motor,V6 3.0 Turbo Diesel,,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,transmissao,Automatica 10 velocidades,,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,tracao,4x4 permanente,,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,suspensao,Independente nas 4 rodas,,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,capacidade_carga,710,kg,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,entre_eixos,3270,mm,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,comprimento,5350,mm,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,tanque,80,litros,https://www.volkswagen.com.br/amarok/,2026-03-30
+Volkswagen,Amarok,Highline V6,BR,preco_sugerido,339990,BRL,https://www.volkswagen.com.br/amarok/,2026-03-30
