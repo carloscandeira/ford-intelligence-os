@@ -167,7 +167,7 @@ def generate_template(input_data: TemplateInput) -> str:
             {"role": "user", "content": user_msg},
         ],
         temperature=0.3,
-        max_tokens=300,
+        max_completion_tokens=300,
     )
 
     return response.choices[0].message.content.strip()

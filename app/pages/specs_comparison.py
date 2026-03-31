@@ -72,7 +72,8 @@ FIELD_LABELS = {
     "potencia": "Potencia (cv)", "torque": "Torque (kgfm)", "motor": "Motor",
     "transmissao": "Transmissao", "tracao": "Tracao", "capacidade_carga": "Cap. Carga (kg)",
     "entre_eixos": "Entre-eixos (mm)", "comprimento": "Comprimento (mm)",
-    "tanque": "Tanque (L)", "preco_sugerido": "Preco FIPE (R$)",
+    "tanque": "Tanque (L)", "preco_sugerido": "Preco Concessionaria (R$)",
+    "preco_concessionaria": "Preco Concessionaria (R$)",
     "autonomia_eletrica": "Autonomia (km)",
 }
 
@@ -201,7 +202,7 @@ def render():
 
     if price_data:
         st.divider()
-        st.subheader("Comparacao de Preco (R$ mil — FIPE)")
+        st.subheader("Comparacao de Preco (R$ mil — Concessionaria)")
         df_price = pd.DataFrame({
             "Veiculo": list(price_data.keys()),
             "Preco (R$ mil)": list(price_data.values()),

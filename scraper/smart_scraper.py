@@ -127,6 +127,18 @@ CATALOGS = [
     },
 ]
 
+# ─────────────────────────────────────────────────────────────
+# PRICE TARGETS — webmotors.com.br (precos reais de concessionaria)
+# URL pattern: webmotors.com.br/{marca}/{modelo}/{ano}
+# ─────────────────────────────────────────────────────────────
+
+PRICE_TARGETS = [
+    {"marca": "Ford",        "modelo": "Ranger",  "url": "https://www.webmotors.com.br/ford/ranger/2025"},
+    {"marca": "Toyota",      "modelo": "Hilux",   "url": "https://www.webmotors.com.br/toyota/hilux/2025"},
+    {"marca": "Volkswagen",  "modelo": "Amarok",  "url": "https://www.webmotors.com.br/volkswagen/amarok/2025"},
+    {"marca": "Mitsubishi",  "modelo": "Triton",  "url": "https://www.webmotors.com.br/mitsubishi/triton/2025"},
+]
+
 # Modelos a EXCLUIR da descoberta (utilitários, caminhões pesados, fora de escopo)
 EXCLUDE_PATTERNS = [
     r"transit-custom", r"f-350", r"f-4000", r"cargo",
@@ -382,7 +394,84 @@ async def scrape_model(page, target: dict) -> tuple[list[ExtractedSpec], list[st
 
 
 # ─────────────────────────────────────────────────────────────
-# MAIN — descobre + extrai
+# ETAPA 3 — Preços de concessionária (webmotors.com.br)
+# ─────────────────────────────────────────────────────────────
+
+async def scrape_prices(page, target: dict) -> tuple[list[ExtractedSpec], list[str]]:
+    """Scrape real dealership prices from webmotors.com.br catalog pages."""
+    marca = target["marca"]
+    modelo = target["modelo"]
+    url = target["url"]
+    errors = []
+    specs = []
+
+    try:
+        print(f"  💰 {marca} {modelo} — {url}")
+        resp = await page.goto(url, wait_until="domcontentloaded", timeout=30000)
+        status = resp.status if resp else 0
+
+        if status in (403, 404):
+            errors.append(f"Preco {marca} {modelo}: {status} — {url}")
+            return specs, errors
+
+        await page.wait_for_timeout(5000)
+        for i in range(3):
+            await page.evaluate(f"window.scrollTo(0, {(i+1)*1500})")
+            await page.wait_for_timeout(800)
+
+        body_text = await page.inner_text("body")
+        print(f"     Body: {len(body_text)} chars")
+
+        # Webmotors shows prices like "R$ 219.990" per version
+        # Pattern: version name followed by price
+        # Extract all R$ values with context
+        price_matches = re.findall(
+            r"([A-Z][A-Za-z0-9 /.+\-]{3,40})\s*(?:\n|\|)\s*(?:a partir de\s*)?R\$\s*([\d.]+(?:,\d{2})?)",
+            body_text
+        )
+
+        if not price_matches:
+            # Alternative: just grab all R$ values > 100k
+            price_matches = re.findall(
+                r"R\$\s*([\d.]+(?:,\d{2})?)",
+                body_text
+            )
+            for price_str in price_matches:
+                clean = price_str.replace(".", "").replace(",00", "")
+                if clean.isdigit() and 100000 < int(clean) < 1000000:
+                    specs.append(ExtractedSpec(
+                        marca=marca, modelo=modelo, versao="Principal",
+                        campo="preco_concessionaria", valor=clean,
+                        unidade="BRL", fonte_url=url,
+                    ))
+                    break  # Take first valid price as base
+        else:
+            for versao_raw, price_str in price_matches:
+                clean = price_str.replace(".", "").replace(",00", "")
+                if clean.isdigit() and 100000 < int(clean) < 1000000:
+                    versao = versao_raw.strip()
+                    specs.append(ExtractedSpec(
+                        marca=marca, modelo=modelo, versao=versao,
+                        campo="preco_concessionaria", valor=clean,
+                        unidade="BRL", fonte_url=url,
+                    ))
+
+        if specs:
+            print(f"     ✅ {len(specs)} precos encontrados")
+            for s in specs:
+                print(f"        {s.versao}: R$ {int(s.valor):,}".replace(",", "."))
+        else:
+            errors.append(f"Preco {marca} {modelo}: 0 precos — {url}")
+            print(f"     ⚠ 0 precos encontrados")
+
+    except Exception as e:
+        errors.append(f"Preco {marca} {modelo}: {type(e).__name__}: {str(e)[:80]}")
+
+    return specs, errors
+
+
+# ─────────────────────────────────────────────────────────────
+# MAIN — descobre + extrai + precos
 # ─────────────────────────────────────────────────────────────
 
 async def scrape_all():
@@ -461,6 +550,19 @@ async def scrape_all():
             ctx = stealth_ctx if (needs_stealth and stealth_ctx) else regular_ctx
             page = await ctx.new_page()
             specs, errors = await scrape_model(page, target)
+            all_specs.extend(specs)
+            all_errors.extend(errors)
+            await page.close()
+            await asyncio.sleep(random.uniform(1, 3))
+
+        # ── ETAPA 3: Preços de concessionária (webmotors) ────
+        print("\n" + "="*55)
+        print("ETAPA 3 — Precos de concessionaria (webmotors.com.br)")
+        print("="*55)
+
+        for target in PRICE_TARGETS:
+            page = await regular_ctx.new_page()
+            specs, errors = await scrape_prices(page, target)
             all_specs.extend(specs)
             all_errors.extend(errors)
             await page.close()
