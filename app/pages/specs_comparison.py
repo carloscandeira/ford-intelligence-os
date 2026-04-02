@@ -130,9 +130,15 @@ def _highlight_best(values: dict, direction: str) -> str:
 
 
 def render():
-    st.header("Ficha Tecnica Comparativa")
     st.markdown(
-        "Compare qualquer veiculo do banco de dados lado a lado. "
+        '<div class="ford-header">'
+        '<div><h1>Ficha Tecnica Comparativa</h1>'
+        '<span class="ford-subtitle">Modulo 1 — Comparacao lado a lado</span></div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "Compare qualquer veiculo do banco de dados **lado a lado**. "
         "Dados extraidos automaticamente dos sites oficiais dos fabricantes. "
         "**✓** indica o melhor valor em cada categoria."
     )

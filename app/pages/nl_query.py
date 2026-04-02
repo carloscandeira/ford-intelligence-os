@@ -73,31 +73,35 @@ ORDER BY marca""",
 
 def render():
     """Render the Consulta Inteligente tab."""
-    st.header("Consulta Inteligente")
     st.markdown(
-        "Faca perguntas em linguagem natural sobre especificacoes de veiculos "
+        '<div class="ford-header">'
+        '<div><h1>Consulta Inteligente</h1>'
+        '<span class="ford-subtitle">Modulo 1 — Inteligencia Competitiva</span></div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "Faca perguntas em **linguagem natural** sobre especificacoes de veiculos "
         "no mercado brasileiro. A IA gera SQL, executa a consulta, e mostra os "
         "resultados com **rastreabilidade completa** (fonte + data de extracao)."
     )
 
     # Status indicator
     if LIVE_MODE:
-        st.success("Conectado ao banco de dados", icon="🟢")
+        st.success("Conectado ao banco de dados — consultas ao vivo", icon="🟢")
     else:
         st.info("Modo demonstracao — banco de dados nao conectado", icon="🔵")
 
     # ─── Input ────────────────────────────────────────────────
-    col1, col2 = st.columns([3, 1])
+    question = st.text_input(
+        "Sua pergunta:",
+        placeholder="Ex: Qual a potencia da Ranger Raptor?",
+    )
 
-    with col1:
-        question = st.text_input(
-            "Sua pergunta:",
-            placeholder="Ex: Qual a potencia da Ranger Raptor?",
-        )
-
-    with col2:
-        st.markdown("##### Exemplos")
-        for ex in EXAMPLE_QUESTIONS:
+    st.markdown("**Exemplos rapidos:**")
+    ex_cols = st.columns(len(EXAMPLE_QUESTIONS))
+    for i, ex in enumerate(EXAMPLE_QUESTIONS):
+        with ex_cols[i]:
             if st.button(ex, key=f"ex_{ex[:20]}", use_container_width=True):
                 question = ex
 

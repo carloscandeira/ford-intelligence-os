@@ -129,10 +129,16 @@ DEMO_TEMPLATES = {
 
 def render():
     """Render the A Ponte (Bridge Demo) tab."""
-    st.header("A Ponte")
+    st.markdown(
+        '<div class="ford-header" style="background: linear-gradient(90deg, #003478 0%, #00234D 40%, #003478 100%);">'
+        '<div><h1>A Ponte</h1>'
+        '<span class="ford-subtitle">Modulo 1 + Modulo 2 — O diferencial competitivo</span></div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
     st.markdown(
         "**O momento de demonstracao.** Aqui os dois modulos se conectam: "
-        "a inteligencia competitiva do Modulo 1 alimenta as mensagens de retencao do Modulo 2."
+        "a inteligencia competitiva do **Modulo 1** alimenta as mensagens de retencao do **Modulo 2**."
     )
 
     # Architecture explanation

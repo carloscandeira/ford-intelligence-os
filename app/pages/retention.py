@@ -106,10 +106,16 @@ def _score_color(score: int) -> str:
 
 def render():
     """Render the Retencao & Churn tab."""
-    st.header("Retencao & Churn")
+    st.markdown(
+        '<div class="ford-header">'
+        '<div><h1>Retencao & Churn</h1>'
+        '<span class="ford-subtitle">Modulo 2 — Risco de perda de clientes</span></div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
     st.markdown(
         "Sistema de scoring de risco de churn baseado em regras. "
-        "Score de 0-100 com 5 fatores ponderados. "
+        "Score de **0-100** com 5 fatores ponderados. "
         "**Alto risco: >70** | **Contatar esta semana: >85**"
     )
 
@@ -254,10 +260,31 @@ def render():
         else:
             score_ranges["86-100 (Critico)"] += 1
 
-    df_dist = pd.DataFrame(
-        {"Faixa": score_ranges.keys(), "Veiculos": score_ranges.values()}
-    )
-    st.bar_chart(df_dist.set_index("Faixa"))
+    range_colors = ["#00B74A", "#FFA900", "#FF6B35", "#F93154"]
+
+    try:
+        import plotly.graph_objects as go
+        fig = go.Figure(go.Bar(
+            x=list(score_ranges.keys()),
+            y=list(score_ranges.values()),
+            marker_color=range_colors,
+            text=list(score_ranges.values()),
+            textposition="outside",
+        ))
+        fig.update_layout(
+            height=300,
+            margin=dict(l=0, r=0, t=10, b=40),
+            yaxis_title="Veiculos",
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            font_color="white",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    except ImportError:
+        df_dist = pd.DataFrame(
+            {"Faixa": score_ranges.keys(), "Veiculos": score_ranges.values()}
+        )
+        st.bar_chart(df_dist.set_index("Faixa"))
 
     # Footer
     st.divider()
