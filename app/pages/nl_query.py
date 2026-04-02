@@ -24,11 +24,11 @@ except Exception:
 # ─────────────────────────────────────────────────────────────
 
 EXAMPLE_QUESTIONS = [
-    "Compare todas as versoes do Ranger (preco, potencia e torque)",
+    "Compare todas as versoes do Ranger",
     "Qual o preco de todas as pickups?",
-    "Compare Ranger Limited vs Hilux SRX vs Amarok Highline",
-    "Qual pickup tem maior capacidade de carga?",
-    "Mostre todas as specs do Ranger Raptor",
+    "Ranger vs Hilux vs Amarok",
+    "Maior capacidade de carga?",
+    "Specs do Ranger Raptor",
 ]
 
 DEMO_RESULTS = {
@@ -73,40 +73,51 @@ ORDER BY marca""",
 
 def render():
     """Render the Consulta Inteligente tab."""
+    # Header
     st.markdown(
         '<div class="ford-header">'
-        '<div><h1>Consulta Inteligente</h1>'
-        '<span class="ford-subtitle">Modulo 1 — Inteligencia Competitiva</span></div>'
+        '<span class="ford-module-tag">Modulo 1</span>'
+        '<h1>Consulta Inteligente</h1>'
+        '<span class="ford-subtitle">Pergunte em portugues, receba dados com rastreabilidade</span>'
         '</div>',
         unsafe_allow_html=True,
     )
-    st.markdown(
-        "Faca perguntas em **linguagem natural** sobre especificacoes de veiculos "
-        "no mercado brasileiro. A IA gera SQL, executa a consulta, e mostra os "
-        "resultados com **rastreabilidade completa** (fonte + data de extracao)."
-    )
 
-    # Status indicator
+    # Status
     if LIVE_MODE:
-        st.success("Conectado ao banco de dados — consultas ao vivo", icon="🟢")
+        st.markdown(
+            '<span class="ford-badge ford-badge-live">Banco conectado — consultas ao vivo</span>',
+            unsafe_allow_html=True,
+        )
     else:
-        st.info("Modo demonstracao — banco de dados nao conectado", icon="🔵")
+        st.markdown(
+            '<span class="ford-badge ford-badge-demo">Modo demonstracao</span>',
+            unsafe_allow_html=True,
+        )
+
+    st.write("")  # spacer
 
     # ─── Input ────────────────────────────────────────────────
     question = st.text_input(
-        "Sua pergunta:",
+        "Sua pergunta sobre veiculos:",
         placeholder="Ex: Qual a potencia da Ranger Raptor?",
+        label_visibility="collapsed",
     )
 
-    st.markdown("**Exemplos rapidos:**")
-    ex_cols = st.columns(len(EXAMPLE_QUESTIONS))
+    # Example pills
+    cols = st.columns(len(EXAMPLE_QUESTIONS))
     for i, ex in enumerate(EXAMPLE_QUESTIONS):
-        with ex_cols[i]:
-            if st.button(ex, key=f"ex_{ex[:20]}", use_container_width=True):
+        with cols[i]:
+            if st.button(ex, key=f"ex_{i}", use_container_width=True):
                 question = ex
 
     if not question:
-        st.caption("Digite uma pergunta acima ou clique em um exemplo.")
+        st.markdown(
+            '<div style="text-align:center; padding:2rem; color: var(--ford-text-secondary);">'
+            'Digite uma pergunta acima ou clique em um exemplo para comecar.'
+            '</div>',
+            unsafe_allow_html=True,
+        )
         return
 
     # ─── Execute ──────────────────────────────────────────────
@@ -137,7 +148,10 @@ def render():
         if LIVE_MODE:
             is_safe, reason = sanitize_sql(sql)
             if is_safe:
-                st.caption("Validacao: SQL seguro (apenas SELECT)")
+                st.markdown(
+                    '<span class="ford-badge ford-badge-live">SQL seguro (apenas SELECT)</span>',
+                    unsafe_allow_html=True,
+                )
             else:
                 st.warning(f"Validacao: {reason}")
 
@@ -146,33 +160,42 @@ def render():
         st.error(f"Erro: {error}")
     elif data:
         df = pd.DataFrame(data)
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
-        col_res, col_date = st.columns([1, 2])
+        # Metrics row
+        col_res, col_date, col_space = st.columns([1, 1, 2])
         with col_res:
-            st.metric("Resultados encontrados", len(data))
+            st.metric("Resultados", len(data))
         with col_date:
             if "extraido_em" in df.columns:
                 datas = df["extraido_em"].dropna().unique()
                 if len(datas) > 0:
-                    st.metric("Dados capturados em", str(datas[0])[:10])
+                    st.metric("Capturado em", str(datas[0])[:10])
 
         # Source attribution
         if "fonte_url" in df.columns:
             fontes = df["fonte_url"].dropna().unique()
             if len(fontes):
-                st.caption("**Fontes verificaveis:**")
+                st.write("")
+                st.markdown(
+                    '<span class="ford-section-title">Fontes verificaveis</span>',
+                    unsafe_allow_html=True,
+                )
                 for url in fontes:
                     if url:
-                        st.caption(f"  🔗 [{url}]({url})")
-
+                        st.markdown(
+                            f'<a href="{url}" target="_blank" class="ford-source-tag">'
+                            f'🔗 {url}</a>',
+                            unsafe_allow_html=True,
+                        )
     else:
         st.warning("Nenhum resultado encontrado para essa consulta.")
 
-    # Disclaimer
-    st.divider()
-    st.caption(
-        "Dados extraidos ao vivo de sites publicos brasileiros. "
-        "Ford: carrosnaweb.com.br (ford.com.br bloqueia scraping automatizado via WAF). "
-        "VW, Toyota, Mitsubishi: sites oficiais .com.br."
+    # Footer
+    st.markdown(
+        '<div class="ford-footer">'
+        'Dados extraidos ao vivo de sites publicos brasileiros. '
+        'Ford: carrosnaweb.com.br | VW, Toyota, Mitsubishi: sites oficiais .com.br'
+        '</div>',
+        unsafe_allow_html=True,
     )

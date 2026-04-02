@@ -31,7 +31,7 @@ from scoring.churn_scorer import (
 # Demo data (when DB not connected)
 # ─────────────────────────────────────────────────────────────
 
-def _generate_demo_vehicles() -> list[VehicleData]:
+def _generate_demo_vehicles():
     """Generate demo vehicles for scoring demonstration."""
     import random
     random.seed(42)
@@ -63,7 +63,7 @@ def _generate_demo_vehicles() -> list[VehicleData]:
     return vehicles
 
 
-def _load_vehicles_from_db() -> list[VehicleData]:
+def _load_vehicles_from_db():
     """Load vehicles from retention_vehicles table."""
     query = text("""
         SELECT vehicle_id, modelo, ultima_visita_paga, tipo_ultimo_servico,
@@ -93,8 +93,18 @@ def _load_vehicles_from_db() -> list[VehicleData]:
     ]
 
 
-def _score_color(score: int) -> str:
-    """Return color indicator for score."""
+def _score_badge(score: int) -> str:
+    """Return HTML badge for score level."""
+    if score > 85:
+        return '<span class="ford-badge" style="background:rgba(220,53,69,0.1);color:#DC3545;border:1px solid rgba(220,53,69,0.2);">CRITICO</span>'
+    if score > 70:
+        return '<span class="ford-badge" style="background:rgba(229,150,10,0.1);color:#E5960A;border:1px solid rgba(229,150,10,0.2);">ALTO</span>'
+    if score > 40:
+        return '<span class="ford-badge" style="background:rgba(0,163,224,0.1);color:#00A3E0;border:1px solid rgba(0,163,224,0.2);">MODERADO</span>'
+    return '<span class="ford-badge" style="background:rgba(14,164,122,0.1);color:#0EA47A;border:1px solid rgba(14,164,122,0.2);">BAIXO</span>'
+
+
+def _score_color_emoji(score: int) -> str:
     if score > 85:
         return "🔴"
     if score > 70:
@@ -106,17 +116,14 @@ def _score_color(score: int) -> str:
 
 def render():
     """Render the Retencao & Churn tab."""
+    # Header
     st.markdown(
         '<div class="ford-header">'
-        '<div><h1>Retencao & Churn</h1>'
-        '<span class="ford-subtitle">Modulo 2 — Risco de perda de clientes</span></div>'
+        '<span class="ford-module-tag">Modulo 2</span>'
+        '<h1>Retencao & Churn</h1>'
+        '<span class="ford-subtitle">Identifique clientes em risco antes que migrem</span>'
         '</div>',
         unsafe_allow_html=True,
-    )
-    st.markdown(
-        "Sistema de scoring de risco de churn baseado em regras. "
-        "Score de **0-100** com 5 fatores ponderados. "
-        "**Alto risco: >70** | **Contatar esta semana: >85**"
     )
 
     # ─── Load & Score ─────────────────────────────────────────
@@ -125,44 +132,97 @@ def render():
             vehicles = _load_vehicles_from_db()
             if not vehicles:
                 vehicles = _generate_demo_vehicles()
-                st.info("Banco vazio — usando dados de demonstracao", icon="🔵")
+                st.markdown('<span class="ford-badge ford-badge-demo">Dados demo</span>', unsafe_allow_html=True)
             else:
-                st.success(f"Conectado — {len(vehicles)} veiculos (com LGPD consent)", icon="🟢")
+                st.markdown(
+                    f'<span class="ford-badge ford-badge-live">{len(vehicles)} veiculos (LGPD consent)</span>',
+                    unsafe_allow_html=True,
+                )
         except Exception:
             vehicles = _generate_demo_vehicles()
-            st.info("Modo demonstracao — banco nao conectado", icon="🔵")
+            st.markdown('<span class="ford-badge ford-badge-demo">Modo demonstracao</span>', unsafe_allow_html=True)
     else:
         vehicles = _generate_demo_vehicles()
-        st.info("Modo demonstracao — banco nao conectado", icon="🔵")
+        st.markdown('<span class="ford-badge ford-badge-demo">Modo demonstracao</span>', unsafe_allow_html=True)
 
     results = score_all_vehicles(vehicles)
 
-    # ─── Top Metrics ──────────────────────────────────────────
-    col1, col2, col3, col4 = st.columns(4)
+    st.write("")
 
+    # ─── Top Metrics ──────────────────────────────────────────
     high_risk = [r for r in results if r.is_high_risk]
     contact_now = [r for r in results if r.contact_this_week]
     avg_score = sum(r.score for r in results) / len(results) if results else 0
 
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Total Veiculos", len(results))
+        st.metric("Total Frota", len(results))
     with col2:
         st.metric("Alto Risco (>70)", len(high_risk))
     with col3:
-        st.metric("Contatar Semana (>85)", len(contact_now))
+        st.metric("Contatar Urgente", len(contact_now))
     with col4:
-        st.metric("Score Medio", f"{avg_score:.0f}")
+        st.metric("Score Medio", f"{avg_score:.0f}/100")
 
-    # ─── Filters ──────────────────────────────────────────────
-    st.divider()
-    col_f1, col_f2, col_f3 = st.columns(3)
+    # ─── Distribution chart + Filters in columns ──────────────
+    st.write("")
+    col_chart, col_filters = st.columns([2, 1])
 
-    with col_f1:
+    with col_chart:
+        st.markdown('<span class="ford-section-title">Distribuicao de Risco</span>', unsafe_allow_html=True)
+
+        score_ranges = {
+            "Baixo\n0-40": 0,
+            "Moderado\n41-70": 0,
+            "Alto\n71-85": 0,
+            "Critico\n86-100": 0,
+        }
+        for r in results:
+            if r.score <= 40:
+                score_ranges["Baixo\n0-40"] += 1
+            elif r.score <= 70:
+                score_ranges["Moderado\n41-70"] += 1
+            elif r.score <= 85:
+                score_ranges["Alto\n71-85"] += 1
+            else:
+                score_ranges["Critico\n86-100"] += 1
+
+        range_colors = ["#0EA47A", "#00A3E0", "#E5960A", "#DC3545"]
+
+        try:
+            import plotly.graph_objects as go
+            fig = go.Figure(go.Bar(
+                x=list(score_ranges.keys()),
+                y=list(score_ranges.values()),
+                marker_color=range_colors,
+                text=list(score_ranges.values()),
+                textposition="outside",
+                textfont=dict(size=13, color="#334155"),
+            ))
+            fig.update_layout(
+                height=250,
+                margin=dict(l=0, r=0, t=8, b=0),
+                yaxis=dict(
+                    gridcolor="rgba(0,0,0,0.05)",
+                    tickfont_color="#94A3B8",
+                ),
+                xaxis=dict(tickfont=dict(size=11, color="#64748B")),
+                plot_bgcolor="rgba(0,0,0,0)",
+                paper_bgcolor="rgba(0,0,0,0)",
+                bargap=0.35,
+            )
+            st.plotly_chart(fig, use_container_width=True)
+        except ImportError:
+            df_dist = pd.DataFrame(
+                {"Faixa": score_ranges.keys(), "Veiculos": score_ranges.values()}
+            )
+            st.bar_chart(df_dist.set_index("Faixa"))
+
+    with col_filters:
+        st.markdown('<span class="ford-section-title">Filtros</span>', unsafe_allow_html=True)
         min_score = st.slider("Score minimo", 0, 100, 0)
-    with col_f2:
         modelos = sorted(set(v.modelo for v in vehicles))
         selected_modelos = st.multiselect("Modelo", modelos, default=modelos)
-    with col_f3:
         show_connected_only = st.checkbox("Apenas connected vehicles")
 
     # Apply filters
@@ -176,8 +236,10 @@ def render():
     ]
 
     # ─── Results Table ────────────────────────────────────────
-    st.divider()
-    st.subheader(f"Veiculos ({len(filtered)} de {len(results)})")
+    st.markdown(
+        f'<span class="ford-section-title">Veiculos ({len(filtered)} de {len(results)})</span>',
+        unsafe_allow_html=True,
+    )
 
     if not filtered:
         st.warning("Nenhum veiculo encontrado com os filtros selecionados.")
@@ -191,27 +253,27 @@ def render():
         if not v:
             continue
         table_rows.append({
-            "Risco": _score_color(r.score),
+            "Risco": _score_color_emoji(r.score),
             "Score": r.score,
-            "Vehicle ID": r.vehicle_id,
+            "ID": r.vehicle_id,
             "Modelo": v.modelo,
             "Ano": v.ano_fabricacao or "N/D",
             "KM": f"{v.km_estimado:,}" if v.km_estimado else "N/D",
-            "Ult. Visita Paga": str(v.ultima_visita_paga) if v.ultima_visita_paga else "Nunca",
-            "Visitas 2 anos": v.qtd_visitas_pagas_2_anos,
-            "Connected": "Sim" if v.connected_vehicle_available else "Nao",
-            "Contatar?": "SIM" if r.contact_this_week else "",
+            "Ult. Visita": str(v.ultima_visita_paga) if v.ultima_visita_paga else "Nunca",
+            "Visitas 2a": v.qtd_visitas_pagas_2_anos,
+            "Connected": "Sim" if v.connected_vehicle_available else "—",
+            "Acao": "CONTATAR" if r.contact_this_week else "",
         })
 
     df = pd.DataFrame(table_rows)
     st.dataframe(df, use_container_width=True, hide_index=True)
 
     # ─── Score Breakdown (detail view) ────────────────────────
-    st.divider()
-    st.subheader("Detalhamento do Score")
+    st.write("")
+    st.markdown('<span class="ford-section-title">Detalhamento do Score</span>', unsafe_allow_html=True)
 
     selected_vehicle = st.selectbox(
-        "Selecione um veiculo para ver o breakdown:",
+        "Selecione um veiculo:",
         [r.vehicle_id for r in filtered],
         format_func=lambda vid: f"{vid} — {vehicle_map[vid].modelo} (Score: {next(r.score for r in filtered if r.vehicle_id == vid)})",
     )
@@ -220,77 +282,44 @@ def render():
         result = next(r for r in filtered if r.vehicle_id == selected_vehicle)
         vehicle = vehicle_map[selected_vehicle]
 
-        col_d1, col_d2 = st.columns([1, 2])
+        col_d1, col_d2 = st.columns([1, 3])
 
         with col_d1:
-            st.metric("Score Total", result.score)
-            if result.contact_this_week:
-                st.error("CONTATAR ESTA SEMANA")
-            elif result.is_high_risk:
-                st.warning("ALTO RISCO")
-            else:
-                st.info("Risco moderado/baixo")
+            # Score gauge
+            score = result.score
+            score_color = "#DC3545" if score > 85 else "#E5960A" if score > 70 else "#00A3E0" if score > 40 else "#0EA47A"
+
+            st.markdown(
+                f'<div style="text-align:center; padding:1rem;">'
+                f'<div style="font-size:2.5rem; font-weight:800; color:{score_color};">{score}</div>'
+                f'<div style="font-size:0.8rem; color:var(--ford-text-secondary);">de 100</div>'
+                f'</div>',
+                unsafe_allow_html=True,
+            )
+
+            st.markdown(_score_badge(score), unsafe_allow_html=True)
 
             if vehicle.connected_vehicle_available and vehicle.sinal_falha_ativo:
-                st.error("ALERTA: Falha ativa detectada via connected vehicle")
+                st.error("Falha ativa detectada")
 
         with col_d2:
             breakdown_rows = []
             for rule_name, details in result.breakdown.items():
+                pts = details["points"]
                 breakdown_rows.append({
                     "Regra": rule_name,
-                    "Pontos": details["points"],
+                    "Pontos": pts,
+                    "Max": 40 if "visita" in rule_name.lower() else 20 if "servico" in rule_name.lower() else 15 if "idade" in rule_name.lower() or "frequencia" in rule_name.lower() else 10,
                     "Detalhes": details["reason"],
                 })
             df_breakdown = pd.DataFrame(breakdown_rows)
             st.dataframe(df_breakdown, use_container_width=True, hide_index=True)
 
-    # ─── Score Distribution ───────────────────────────────────
-    st.divider()
-    st.subheader("Distribuicao de Scores")
-
-    score_ranges = {"0-40 (Baixo)": 0, "41-70 (Moderado)": 0, "71-85 (Alto)": 0, "86-100 (Critico)": 0}
-    for r in results:
-        if r.score <= 40:
-            score_ranges["0-40 (Baixo)"] += 1
-        elif r.score <= 70:
-            score_ranges["41-70 (Moderado)"] += 1
-        elif r.score <= 85:
-            score_ranges["71-85 (Alto)"] += 1
-        else:
-            score_ranges["86-100 (Critico)"] += 1
-
-    range_colors = ["#00B74A", "#FFA900", "#FF6B35", "#F93154"]
-
-    try:
-        import plotly.graph_objects as go
-        fig = go.Figure(go.Bar(
-            x=list(score_ranges.keys()),
-            y=list(score_ranges.values()),
-            marker_color=range_colors,
-            text=list(score_ranges.values()),
-            textposition="outside",
-        ))
-        fig.update_layout(
-            height=300,
-            margin=dict(l=0, r=0, t=10, b=40),
-            yaxis_title="Veiculos",
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font_color="white",
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    except ImportError:
-        df_dist = pd.DataFrame(
-            {"Faixa": score_ranges.keys(), "Veiculos": score_ranges.values()}
-        )
-        st.bar_chart(df_dist.set_index("Faixa"))
-
     # Footer
-    st.divider()
-    st.caption(
-        "Scoring v1: regras baseadas (sem ML). "
-        "Pesos: visita paga (40pts), tipo servico (20pts), idade (15pts), "
-        "frequencia (15pts), revisao proxima (10pts). "
-        "Filtro LGPD aplicado — apenas veiculos com consentimento."
+    st.markdown(
+        '<div class="ford-footer">'
+        'Scoring v1: regras ponderadas (visita 40pts, servico 20pts, idade 15pts, '
+        'frequencia 15pts, revisao 10pts). Filtro LGPD aplicado.'
+        '</div>',
+        unsafe_allow_html=True,
     )
