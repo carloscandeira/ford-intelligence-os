@@ -6,9 +6,7 @@ Generates branded PDF reports for:
 2. Retencao & Churn (at-risk vehicles report)
 """
 
-import io
 from datetime import datetime
-from typing import Optional
 
 from fpdf import FPDF
 
@@ -28,6 +26,32 @@ LIGHT_BG = (245, 247, 250)
 ROW_ALT = (248, 250, 252)
 
 
+# ─── Latin-1 sanitizer ────────────────────────────────────────
+# The core PDF fonts (Helvetica) only support the latin-1 charset.
+# Characters like the em dash, smart quotes, arrows, and checkmarks
+# raise a FPDFUnicodeEncodingException. Map the common ones to safe
+# ASCII equivalents and replace anything else still out of range.
+_CHAR_MAP = {
+    "—": "-", "–": "-", "‒": "-", "―": "-",  # dashes
+    "“": '"', "”": '"', "„": '"',                # double quotes
+    "‘": "'", "’": "'", "‚": "'",                # single quotes
+    "•": "-", "…": "...", "→": "->", "←": "<-",
+    "✓": "OK", "✔": "OK", "✗": "x", "✘": "x",
+    "★": "*", "☆": "*", " ": " ",
+}
+
+
+def _latin1_safe(text):
+    """Return a string that the core Helvetica font can always render."""
+    if text is None:
+        return ""
+    s = str(text)
+    for bad, good in _CHAR_MAP.items():
+        s = s.replace(bad, good)
+    # Drop anything still outside latin-1 instead of crashing the export.
+    return s.encode("latin-1", "replace").decode("latin-1")
+
+
 class FordPDF(FPDF):
     """Custom FPDF with Ford branding."""
 
@@ -36,6 +60,15 @@ class FordPDF(FPDF):
         self.report_title = title
         self.report_subtitle = subtitle
         self.set_auto_page_break(auto=True, margin=20)
+
+    def cell(self, w=0, h=0, text="", *args, **kwargs):
+        """Sanitize every string so unicode chars never crash the export."""
+        if "txt" in kwargs:
+            kwargs["txt"] = _latin1_safe(kwargs["txt"])
+        return super().cell(w, h, _latin1_safe(text), *args, **kwargs)
+
+    def get_string_width(self, s, *args, **kwargs):
+        return super().get_string_width(_latin1_safe(s), *args, **kwargs)
 
     def header(self):
         # Blue header bar
@@ -129,11 +162,12 @@ FIELD_LABELS = {
     "transmissao": "Transmissao", "tracao": "Tracao", "capacidade_carga": "Cap. Carga (kg)",
     "entre_eixos": "Entre-eixos (mm)", "comprimento": "Comprimento (mm)",
     "tanque": "Tanque (L)", "preco_sugerido": "Preco (R$)",
-    "preco_concessionaria": "Preco Concessionaria", "autonomia_eletrica": "Autonomia (km)",
+    "preco_fipe": "Preco FIPE (R$)",
+    "autonomia_eletrica": "Autonomia (km)",
 }
 
 FIELD_ORDER = [
-    "preco_sugerido", "potencia", "torque", "motor", "transmissao",
+    "preco_sugerido", "preco_fipe", "potencia", "torque", "motor", "transmissao",
     "tracao", "capacidade_carga", "tanque", "entre_eixos", "comprimento",
     "autonomia_eletrica",
 ]
@@ -141,7 +175,7 @@ FIELD_ORDER = [
 NUMERIC_FIELDS = {
     "potencia": "higher", "torque": "higher", "capacidade_carga": "higher",
     "entre_eixos": "higher", "comprimento": "higher", "tanque": "higher",
-    "preco_sugerido": "lower",
+    "preco_sugerido": "lower", "preco_fipe": "lower",
 }
 
 
@@ -323,7 +357,8 @@ def generate_specs_pdf(selected_specs, selected_vehicles):
     pdf.cell(0, 4, "ford.com.br bloqueia scraping automatizado (Cloudflare WAF). Em producao: Ford Developer Portal API.", ln=True)
 
     # Output
-    return pdf.output()
+    # fpdf2 returns a bytearray; st.download_button requires bytes.
+    return bytes(pdf.output())
 
 
 # ══════════════════════════════════════════════════════════════
@@ -525,4 +560,5 @@ def generate_retention_pdf(results, vehicles, vehicle_map):
     pdf.set_font("Helvetica", "I", 6.5)
     pdf.cell(0, 4, "Filtro LGPD aplicado — apenas veiculos com consentimento ativo. Scoring v1: regras ponderadas (sem ML).", ln=True)
 
-    return pdf.output()
+    # fpdf2 returns a bytearray; st.download_button requires bytes.
+    return bytes(pdf.output())
