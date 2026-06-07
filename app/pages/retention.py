@@ -8,7 +8,6 @@ Shows churn risk scores, breakdown per vehicle, filters, and batch scoring.
 import streamlit as st
 import pandas as pd
 from datetime import date, datetime
-from typing import Optional
 
 # Try to import real modules
 import os
@@ -21,8 +20,6 @@ except Exception:
 
 from scoring.churn_scorer import (
     VehicleData,
-    ScoreResult,
-    calculate_churn_score,
     score_all_vehicles,
 )
 
@@ -146,6 +143,21 @@ def render():
         st.markdown('<span class="ford-badge ford-badge-demo">Modo demonstracao</span>', unsafe_allow_html=True)
 
     results = score_all_vehicles(vehicles)
+    vehicle_map = {v.vehicle_id: v for v in vehicles}
+
+    # ─── PDF Export ───────────────────────────────────────────
+    try:
+        from app.pdf_report import generate_retention_pdf
+        pdf_bytes = generate_retention_pdf(results, vehicles, vehicle_map)
+        st.download_button(
+            "Exportar PDF",
+            data=pdf_bytes,
+            file_name=f"retencao_churn_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+            mime="application/pdf",
+            type="primary",
+        )
+    except Exception:
+        st.caption("Exportacao em PDF temporariamente indisponivel.")
 
     st.write("")
 
@@ -246,7 +258,6 @@ def render():
         return
 
     # Build display dataframe
-    vehicle_map = {v.vehicle_id: v for v in vehicles}
     table_rows = []
     for r in filtered:
         v = vehicle_map.get(r.vehicle_id)
@@ -309,7 +320,7 @@ def render():
                 breakdown_rows.append({
                     "Regra": rule_name,
                     "Pontos": pts,
-                    "Max": 40 if "visita" in rule_name.lower() else 20 if "servico" in rule_name.lower() else 15 if "idade" in rule_name.lower() or "frequencia" in rule_name.lower() else 10,
+                    "Max": details.get("max", 0),
                     "Detalhes": details["reason"],
                 })
             df_breakdown = pd.DataFrame(breakdown_rows)

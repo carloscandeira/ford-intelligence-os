@@ -97,20 +97,22 @@ def calculate_churn_score(vehicle: VehicleData) -> ScoreResult:
     if days is None or days > 365:
         score += 40
         reason = "sem visita paga registrada" if days is None else f"{days} dias sem visita paga"
-        breakdown["dias_sem_visita_paga"] = {"points": 40, "reason": reason}
+        breakdown["dias_sem_visita_paga"] = {"points": 40, "max": 40, "reason": reason}
     else:
-        breakdown["dias_sem_visita_paga"] = {"points": 0, "reason": f"{days} dias (< 365)"}
+        breakdown["dias_sem_visita_paga"] = {"points": 0, "max": 40, "reason": f"{days} dias (< 365)"}
 
     # Rule 2: Last service was warranty/recall only (never paid)
     if vehicle.tipo_ultimo_servico in ("garantia", "recall"):
         score += 20
         breakdown["tipo_ultimo_servico"] = {
             "points": 20,
+            "max": 20,
             "reason": f"ultimo servico: {vehicle.tipo_ultimo_servico}",
         }
     else:
         breakdown["tipo_ultimo_servico"] = {
             "points": 0,
+            "max": 20,
             "reason": f"ultimo servico: {vehicle.tipo_ultimo_servico or 'N/A'}",
         }
 
@@ -118,20 +120,26 @@ def calculate_churn_score(vehicle: VehicleData) -> ScoreResult:
     age = _vehicle_age_years(vehicle.ano_fabricacao)
     if age is not None and age > 5:
         score += 15
-        breakdown["idade_veiculo"] = {"points": 15, "reason": f"{age} anos (> 5)"}
+        breakdown["idade_veiculo"] = {"points": 15, "max": 15, "reason": f"{age} anos (> 5)"}
     else:
         breakdown["idade_veiculo"] = {
             "points": 0,
+            "max": 15,
             "reason": f"{age} anos" if age is not None else "ano desconhecido",
         }
 
     # Rule 4: Zero paid visits in last 2 years
     if vehicle.qtd_visitas_pagas_2_anos == 0:
         score += 15
-        breakdown["visitas_pagas_2_anos"] = {"points": 15, "reason": "0 visitas pagas em 2 anos"}
+        breakdown["visitas_pagas_2_anos"] = {
+            "points": 15,
+            "max": 15,
+            "reason": "0 visitas pagas em 2 anos",
+        }
     else:
         breakdown["visitas_pagas_2_anos"] = {
             "points": 0,
+            "max": 15,
             "reason": f"{vehicle.qtd_visitas_pagas_2_anos} visitas pagas em 2 anos",
         }
 
@@ -139,10 +147,15 @@ def calculate_churn_score(vehicle: VehicleData) -> ScoreResult:
     km = vehicle.km_real_odometro if vehicle.connected_vehicle_available else vehicle.km_estimado
     if _near_revision_milestone(km):
         score += 10
-        breakdown["proximo_revisao"] = {"points": 10, "reason": f"{km} km (proximo de revisao)"}
+        breakdown["proximo_revisao"] = {
+            "points": 10,
+            "max": 10,
+            "reason": f"{km} km (proximo de revisao)",
+        }
     else:
         breakdown["proximo_revisao"] = {
             "points": 0,
+            "max": 10,
             "reason": f"{km} km" if km is not None else "km desconhecido",
         }
 
@@ -151,7 +164,7 @@ def calculate_churn_score(vehicle: VehicleData) -> ScoreResult:
         # Bonus signal: vehicle is sending active fault codes
         # This doesn't change the max score (still 100) but can push borderline cases
         # into the "contact this week" zone
-        breakdown["sinal_falha"] = {"points": 0, "reason": "ALERTA: falha ativa detectada"}
+        breakdown["sinal_falha"] = {"points": 0, "max": 0, "reason": "ALERTA: falha ativa detectada"}
 
     # Clamp to 0-100
     score = max(0, min(100, score))
