@@ -182,10 +182,12 @@ def render():
                     unsafe_allow_html=True,
                 )
                 for url in fontes:
-                    if url:
+                    if url and str(url).startswith(("http://", "https://")):
+                        import html as _html
+                        safe_url = _html.escape(str(url))
                         st.markdown(
-                            f'<a href="{url}" target="_blank" class="ford-source-tag">'
-                            f'🔗 {url}</a>',
+                            f'<a href="{safe_url}" target="_blank" class="ford-source-tag">'
+                            f'🔗 {safe_url}</a>',
                             unsafe_allow_html=True,
                         )
     else:

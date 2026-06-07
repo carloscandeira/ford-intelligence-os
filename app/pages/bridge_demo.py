@@ -315,8 +315,9 @@ def render():
         _step(3, "Template Gerado")
 
         # WhatsApp-style preview
+        import html as _html
         st.markdown(
-            f'<div class="ford-whatsapp">{template_text}</div>',
+            f'<div class="ford-whatsapp">{_html.escape(template_text).replace(chr(10), "<br>")}</div>',
             unsafe_allow_html=True,
         )
 

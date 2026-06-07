@@ -366,6 +366,7 @@ st.markdown(FORD_CSS, unsafe_allow_html=True)
 # Data freshness helper
 # ─────────────────────────────────────────────────────────────
 
+@st.cache_data(ttl=300)
 def _get_data_freshness():
     """Check when data was last updated. Returns (label, badge_class)."""
     try:
