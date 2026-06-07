@@ -13,3 +13,9 @@ venv/
 data/ford_real/
 *.csv
 !data/synthetic/*.csv
+node_modules/
+package.json
+package-lock.json
+
+# Local dev tooling (Claude preview config)
+.claude/

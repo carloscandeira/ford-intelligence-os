@@ -11,6 +11,7 @@ import streamlit as st
 import pandas as pd
 
 import os
+from datetime import datetime
 from typing import Optional
 try:
     from sqlalchemy import text
@@ -65,20 +66,26 @@ SPECS_DATA = {
 NUMERIC_FIELDS = {
     "potencia": "higher", "torque": "higher", "capacidade_carga": "higher",
     "entre_eixos": "higher", "comprimento": "higher", "tanque": "higher",
-    "preco_sugerido": "lower",
+    "preco_sugerido": "lower", "preco_fipe": "lower",
 }
 
 FIELD_LABELS = {
-    "potencia": "Potencia (cv)", "torque": "Torque (kgfm)", "motor": "Motor",
-    "transmissao": "Transmissao", "tracao": "Tracao", "capacidade_carga": "Cap. Carga (kg)",
-    "entre_eixos": "Entre-eixos (mm)", "comprimento": "Comprimento (mm)",
-    "tanque": "Tanque (L)", "preco_sugerido": "Preco Concessionaria (R$)",
-    "preco_concessionaria": "Preco Concessionaria (R$)",
-    "autonomia_eletrica": "Autonomia (km)",
+    "potencia": "Potencia", "torque": "Torque", "motor": "Motor",
+    "transmissao": "Transmissao", "tracao": "Tracao", "capacidade_carga": "Cap. Carga",
+    "entre_eixos": "Entre-eixos", "comprimento": "Comprimento",
+    "tanque": "Tanque", "preco_sugerido": "Preco (R$)",
+    "preco_fipe": "Preco FIPE (R$)",
+    "autonomia_eletrica": "Autonomia",
+}
+
+FIELD_UNITS = {
+    "potencia": "cv", "torque": "kgfm", "capacidade_carga": "kg",
+    "entre_eixos": "mm", "comprimento": "mm", "tanque": "L",
+    "preco_sugerido": "R$", "preco_fipe": "R$", "autonomia_eletrica": "km",
 }
 
 FIELD_ORDER = [
-    "preco_sugerido", "potencia", "torque", "motor", "transmissao",
+    "preco_sugerido", "preco_fipe", "potencia", "torque", "motor", "transmissao",
     "tracao", "capacidade_carga", "tanque", "entre_eixos", "comprimento",
     "autonomia_eletrica",
 ]
@@ -90,7 +97,7 @@ def _load_live_data() -> dict:
         rows = conn.execute(text("""
             SELECT marca, modelo, versao, campo, valor, unidade
             FROM vehicle_spec
-            WHERE mercado = 'BR'
+            WHERE mercado = 'BR' AND verificado = TRUE
             ORDER BY marca, modelo, versao, campo
         """)).fetchall()
 
@@ -130,11 +137,14 @@ def _highlight_best(values: dict, direction: str) -> str:
 
 
 def render():
-    st.header("Ficha Tecnica Comparativa")
+    # Header
     st.markdown(
-        "Compare qualquer veiculo do banco de dados lado a lado. "
-        "Dados extraidos automaticamente dos sites oficiais dos fabricantes. "
-        "**✓** indica o melhor valor em cada categoria."
+        '<div class="ford-header">'
+        '<span class="ford-module-tag">Modulo 1</span>'
+        '<h1>Ficha Tecnica Comparativa</h1>'
+        '<span class="ford-subtitle">Comparacao lado a lado com dados ao vivo</span>'
+        '</div>',
+        unsafe_allow_html=True,
     )
 
     # Load data
@@ -143,15 +153,20 @@ def render():
             specs = _load_live_data()
             if not specs:
                 specs = SPECS_DATA
-                st.info("Banco vazio — usando dados de demonstracao", icon="🔵")
+                st.markdown('<span class="ford-badge ford-badge-demo">Banco vazio — dados demo</span>', unsafe_allow_html=True)
             else:
-                st.success(f"Banco conectado — {len(specs)} versoes disponiveis", icon="🟢")
-        except Exception as e:
+                st.markdown(
+                    f'<span class="ford-badge ford-badge-live">{len(specs)} versoes disponiveis</span>',
+                    unsafe_allow_html=True,
+                )
+        except Exception:
             specs = SPECS_DATA
-            st.info("Modo demonstracao", icon="🔵")
+            st.markdown('<span class="ford-badge ford-badge-demo">Modo demonstracao</span>', unsafe_allow_html=True)
     else:
         specs = SPECS_DATA
-        st.info("Modo demonstracao — banco nao conectado", icon="🔵")
+        st.markdown('<span class="ford-badge ford-badge-demo">Modo demonstracao</span>', unsafe_allow_html=True)
+
+    st.write("")
 
     # ─── Vehicle selector ─────────────────────────────────────
     all_vehicles = sorted(specs.keys(), key=lambda x: (x[0] != "Ford", x[0], x[1], x[2]))
@@ -168,7 +183,7 @@ def render():
     col_sel, col_filter = st.columns([3, 1])
     with col_filter:
         marca_filter = st.selectbox(
-            "Filtrar por marca:",
+            "Filtrar marca",
             ["Todas"] + sorted(set(m for m, _, _ in all_vehicles)),
         )
 
@@ -178,38 +193,56 @@ def render():
 
     with col_sel:
         selected_labels = st.multiselect(
-            "Selecione veiculos para comparar:",
+            "Veiculos para comparar",
             options=filtered_labels,
             default=[vehicle_labels[i] for i in default_idx
                      if vehicle_labels[i] in filtered_labels][:4],
         )
 
     if len(selected_labels) < 2:
-        st.warning("Selecione pelo menos 2 veiculos para comparar.")
+        st.info("Selecione pelo menos 2 veiculos para comparar.")
         return
 
     selected_vehicles = [filtered_vehicles[filtered_labels.index(l)] for l in selected_labels]
     selected_specs = {k: specs[k] for k in selected_vehicles}
 
+    # ─── PDF Export button ────────────────────────────────────
+    try:
+        from app.pdf_report import generate_specs_pdf
+        pdf_bytes = generate_specs_pdf(selected_specs, selected_vehicles)
+        st.download_button(
+            "Exportar PDF",
+            data=pdf_bytes,
+            file_name=f"ficha_tecnica_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+            mime="application/pdf",
+            type="primary",
+        )
+    except Exception:
+        st.caption("Exportacao em PDF temporariamente indisponivel.")
+
     # ─── Price chart ──────────────────────────────────────────
     price_data = {}
     for (marca, modelo, versao), vspecs in selected_specs.items():
-        if "preco_sugerido" in vspecs:
-            val = _to_float(vspecs["preco_sugerido"][0])
+        # Preço sugerido de fábrica é o preferido; cai pra FIPE quando ausente.
+        price_field = "preco_sugerido" if "preco_sugerido" in vspecs else (
+            "preco_fipe" if "preco_fipe" in vspecs else None
+        )
+        if price_field:
+            val = _to_float(vspecs[price_field][0])
             if val:
-                label = f"{marca}\n{modelo} {versao}"
-                price_data[label] = val / 1000  # em mil R$
+                label = f"{marca} {modelo} {versao}"
+                price_data[label] = val / 1000
 
     if price_data:
-        st.divider()
-        st.subheader("Comparacao de Preco (R$ mil — Concessionaria)")
+        st.write("")
+        st.markdown('<span class="ford-section-title">Comparacao de Preco</span>', unsafe_allow_html=True)
+
         df_price = pd.DataFrame({
             "Veiculo": list(price_data.keys()),
             "Preco (R$ mil)": list(price_data.values()),
         }).sort_values("Preco (R$ mil)")
 
-        # Color Ford bars differently
-        colors = ["#003478" if "Ford" in v else "#888888" for v in df_price["Veiculo"]]
+        colors = ["#003478" if "Ford" in v else "#CBD5E1" for v in df_price["Veiculo"]]
 
         try:
             import plotly.graph_objects as go
@@ -220,22 +253,27 @@ def render():
                 marker_color=colors,
                 text=[f"R$ {v:,.0f}k".replace(",", ".") for v in df_price["Preco (R$ mil)"]],
                 textposition="outside",
+                textfont=dict(size=12, color="#334155"),
             ))
             fig.update_layout(
-                height=max(200, len(price_data) * 60),
-                margin=dict(l=0, r=80, t=10, b=10),
-                xaxis_title="R$ mil",
+                height=max(180, len(price_data) * 55),
+                margin=dict(l=10, r=60, t=8, b=8),
+                xaxis=dict(
+                    title="R$ mil",
+                    gridcolor="rgba(0,0,0,0.06)",
+                    title_font_color="#94A3B8",
+                    tickfont_color="#94A3B8",
+                ),
+                yaxis=dict(tickfont=dict(size=11, color="#334155")),
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
-                font_color="white",
             )
             st.plotly_chart(fig, use_container_width=True)
         except ImportError:
             st.bar_chart(df_price.set_index("Veiculo"))
 
     # ─── Comparison table ─────────────────────────────────────
-    st.divider()
-    st.subheader("Especificacoes Tecnicas")
+    st.markdown('<span class="ford-section-title">Especificacoes Tecnicas</span>', unsafe_allow_html=True)
 
     all_campos = set()
     for vspecs in selected_specs.values():
@@ -246,7 +284,12 @@ def render():
 
     rows = []
     for campo in ordered_campos:
-        row = {"Especificacao": FIELD_LABELS.get(campo, campo)}
+        label = FIELD_LABELS.get(campo, campo)
+        unit = FIELD_UNITS.get(campo, "")
+        if unit and unit != "R$":
+            label = f"{label} ({unit})"
+
+        row = {"Especificacao": label}
         numeric_vals = {}
 
         for (marca, modelo, versao), vspecs in selected_specs.items():
@@ -273,8 +316,7 @@ def render():
                  height=min(len(rows) * 38 + 40, 600))
 
     # ─── Win summary ──────────────────────────────────────────
-    st.divider()
-    st.subheader("Resumo Competitivo")
+    st.markdown('<span class="ford-section-title">Resumo Competitivo</span>', unsafe_allow_html=True)
 
     wins = {}
     for campo in ordered_campos:
@@ -302,14 +344,16 @@ def render():
                     "Volkswagen ", "VW ").replace("Mitsubishi ", "")
                 st.metric(
                     short,
-                    f"{count} lider(es)",
+                    f"{count} {'vitorias' if count > 1 else 'vitoria'}",
                     delta="Ford" if is_ford else None,
                     delta_color="normal" if is_ford else "off",
                 )
 
-    st.divider()
-    st.caption(
-        "Fontes: vw.com.br, toyota.com.br, mitsubishimotors.com.br (oficiais) | "
-        "Ford: carrosnaweb.com.br (ford.com.br bloqueia scraping). "
-        "Precos: Tabela FIPE."
+    # Footer
+    st.markdown(
+        '<div class="ford-footer">'
+        'Fontes: vw.com.br, toyota.com.br, mitsubishimotors.com.br (oficiais) | '
+        'Ford: carrosnaweb.com.br | ✓ = melhor valor na categoria'
+        '</div>',
+        unsafe_allow_html=True,
     )

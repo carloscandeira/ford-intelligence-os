@@ -91,7 +91,7 @@ DEMO_TEMPLATES = {
             "Agende aqui: [link]"
         ),
         "review_passed": True,
-        "review_notes": "OK — todos os numeros verificados contra input",
+        "review_notes": "Todos os numeros verificados contra input",
     },
     "VH-0034": {
         "text": (
@@ -101,7 +101,7 @@ DEMO_TEMPLATES = {
             "Agende aqui: [link]"
         ),
         "review_passed": True,
-        "review_notes": "OK — todos os numeros verificados contra input",
+        "review_notes": "Todos os numeros verificados contra input",
     },
     "VH-0056": {
         "text": (
@@ -111,7 +111,7 @@ DEMO_TEMPLATES = {
             "Agende aqui: [link]"
         ),
         "review_passed": True,
-        "review_notes": "OK — template generico (sem diferencial competitivo)",
+        "review_notes": "Template generico (sem diferencial competitivo)",
     },
     "VH-0078": {
         "text": (
@@ -122,63 +122,79 @@ DEMO_TEMPLATES = {
             "Agende aqui: [link]"
         ),
         "review_passed": True,
-        "review_notes": "OK — todos os numeros verificados contra input",
+        "review_notes": "Todos os numeros verificados contra input",
     },
 }
 
 
-def render():
-    """Render the A Ponte (Bridge Demo) tab."""
-    st.header("A Ponte")
+def _step(num, title):
+    """Render a numbered step header."""
     st.markdown(
-        "**O momento de demonstracao.** Aqui os dois modulos se conectam: "
-        "a inteligencia competitiva do Modulo 1 alimenta as mensagens de retencao do Modulo 2."
+        f'<div class="ford-step-header">'
+        f'<span class="ford-step-badge">{num}</span>'
+        f'<h3>{title}</h3>'
+        f'</div>',
+        unsafe_allow_html=True,
     )
 
-    # Architecture explanation
-    with st.expander("Como funciona a Ponte?", expanded=False):
-        st.markdown("""
-        ```
-        Modulo 1 (Specs)          Modulo 2 (Retencao)
-        vehicle_spec     ──JOIN──  retention_vehicles
-             │                          │
-             ▼                          ▼
-        Diferenciais             Veiculos alto risco
-        competitivos             (score > threshold)
-             │                          │
-             └──────────┬───────────────┘
-                        ▼
-                  Template LLM
-                  (com guardrails)
-                        │
-                        ▼
-                  Reviewer Pass
-                  (valida numeros)
-                        │
-                        ▼
-                  Aprovacao Humana
-                        │
-                        ▼
-                  WhatsApp (simulado)
-        ```
 
-        **Bridge JOIN:** conecta `vehicle_spec.modelo = retention_vehicles.modelo`
-        para encontrar diferenciais competitivos que so o Ford tem vs concorrentes.
+def render():
+    """Render the A Ponte (Bridge Demo) tab."""
+    # Header
+    st.markdown(
+        '<div class="ford-header" style="background: linear-gradient(135deg, #001A3A 0%, #003478 100%);">'
+        '<span class="ford-module-tag">Modulo 1 + 2</span>'
+        '<h1>A Ponte</h1>'
+        '<span class="ford-subtitle">Inteligencia competitiva alimenta retencao ativa</span>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
-        **Guardrail:** o reviewer pass compara TODOS os numeros no template gerado
-        contra os numeros no input. Se aparecer um numero que nao estava no input,
-        o template e flaggado para revisao humana.
-        """)
+    # Visual pipeline
+    st.markdown(
+        '<div style="display:flex; align-items:center; justify-content:center; gap:0; '
+        'padding:0.75rem 0; flex-wrap:wrap;">'
+        '<div style="background:#003478; color:white; padding:8px 16px; border-radius:8px 0 0 8px; '
+        'font-size:0.78rem; font-weight:600;">Specs Competitivas</div>'
+        '<div style="background:#1B4F9E; color:white; padding:8px 4px; font-size:1rem;">→</div>'
+        '<div style="background:#1B4F9E; color:white; padding:8px 16px; '
+        'font-size:0.78rem; font-weight:600;">Veiculos Alto Risco</div>'
+        '<div style="background:#00A3E0; color:white; padding:8px 4px; font-size:1rem;">→</div>'
+        '<div style="background:#00A3E0; color:white; padding:8px 16px; '
+        'font-size:0.78rem; font-weight:600;">Template LLM</div>'
+        '<div style="background:#0EA47A; color:white; padding:8px 4px; font-size:1rem;">→</div>'
+        '<div style="background:#0EA47A; color:white; padding:8px 16px; '
+        'font-size:0.78rem; font-weight:600;">Reviewer</div>'
+        '<div style="background:#0EA47A; color:white; padding:8px 4px; font-size:1rem;">→</div>'
+        '<div style="background:#0EA47A; color:white; padding:8px 16px; border-radius:0 8px 8px 0; '
+        'font-size:0.78rem; font-weight:600;">WhatsApp</div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+    # Architecture (collapsible)
+    with st.expander("Como funciona a Ponte?"):
+        col_arch1, col_arch2 = st.columns(2)
+        with col_arch1:
+            st.markdown(
+                "**Bridge JOIN:** conecta `vehicle_spec.modelo = retention_vehicles.modelo` "
+                "para encontrar diferenciais competitivos exclusivos do Ford vs concorrentes."
+            )
+        with col_arch2:
+            st.markdown(
+                "**Guardrail:** o reviewer compara TODOS os numeros no template gerado "
+                "contra os dados de entrada. Numero inventado = template flaggado."
+            )
 
     st.divider()
 
     # ─── Step 1: Select High-Risk Vehicles ────────────────────
-    st.subheader("1. Veiculos de Alto Risco")
+    _step(1, "Veiculos de Alto Risco")
 
     threshold = st.slider("Threshold de risco", 50, 100, 85)
 
     # Load data
-    bridge_data = DEMO_BRIDGE_DATA  # default to demo
+    bridge_data = DEMO_BRIDGE_DATA
     using_live = False
 
     if BRIDGE_AVAILABLE:
@@ -199,23 +215,27 @@ def render():
                     for d in live_data
                 ]
                 using_live = True
-                st.success(f"Dados ao vivo — {len(bridge_data)} veiculos acima do threshold", icon="🟢")
+                st.markdown(
+                    f'<span class="ford-badge ford-badge-live">{len(bridge_data)} veiculos acima do threshold</span>',
+                    unsafe_allow_html=True,
+                )
         except Exception:
             pass
 
     if not using_live:
-        # Filter demo data by threshold
         bridge_data = [d for d in DEMO_BRIDGE_DATA if d["churn_score"] >= threshold]
-        st.info("Modo demonstracao — dados sinteticos", icon="🔵")
+        st.markdown('<span class="ford-badge ford-badge-demo">Dados sinteticos</span>', unsafe_allow_html=True)
 
     if not bridge_data:
         st.warning(f"Nenhum veiculo com score >= {threshold}. Reduza o threshold.")
         return
 
+    st.write("")
+
     # Display vehicle cards
     df_vehicles = pd.DataFrame([
         {
-            "Vehicle ID": d["vehicle_id"],
+            "ID": d["vehicle_id"],
             "Modelo": f"{d['modelo']} {d.get('versao', '')}",
             "KM": f"{d['km_estimado']:,}" if d.get("km_estimado") else "N/D",
             "Score": d["churn_score"],
@@ -228,7 +248,7 @@ def render():
 
     # ─── Step 2: Generate Template ────────────────────────────
     st.divider()
-    st.subheader("2. Gerar Template WhatsApp")
+    _step(2, "Gerar Template WhatsApp")
 
     selected_vid = st.selectbox(
         "Selecione um veiculo:",
@@ -242,14 +262,17 @@ def render():
     selected = next(d for d in bridge_data if d["vehicle_id"] == selected_vid)
 
     # Show input fields
-    with st.expander("Campos de entrada para o LLM", expanded=True):
-        st.json({
-            "modelo": selected["modelo"],
-            "versao": selected.get("versao", "N/D"),
-            "km_estimado": selected.get("km_estimado"),
-            "ultimo_servico": selected.get("ultimo_servico"),
-            "diferencial_competitivo": selected.get("diferencial") or "nenhum disponivel",
-        })
+    with st.expander("Dados de entrada para o LLM", expanded=True):
+        input_cols = st.columns(3)
+        with input_cols[0]:
+            st.markdown(f"**Modelo:** {selected['modelo']} {selected.get('versao', '')}")
+            st.markdown(f"**KM:** {selected.get('km_estimado', 'N/D'):,}")
+        with input_cols[1]:
+            st.markdown(f"**Ult. servico:** {selected.get('ultimo_servico', 'N/D')}")
+            st.markdown(f"**Churn score:** {selected['churn_score']}")
+        with input_cols[2]:
+            diff = selected.get('diferencial') or 'Nenhum disponivel'
+            st.markdown(f"**Diferencial:** {diff}")
 
     generate_btn = st.button("Gerar Template", type="primary", use_container_width=True)
 
@@ -258,7 +281,6 @@ def render():
 
         with st.spinner("Gerando template com guardrails..."):
             if using_live and BRIDGE_AVAILABLE:
-                # Use real LLM generation
                 template_input = TemplateInput(
                     vehicle_id=selected["vehicle_id"],
                     cliente_id=selected["cliente_id"],
@@ -274,7 +296,6 @@ def render():
                 review_passed = output.review_passed
                 review_notes = output.review_notes
             else:
-                # Demo mode
                 demo_t = DEMO_TEMPLATES.get(selected_vid)
                 if demo_t:
                     template_text = demo_t["text"]
@@ -287,70 +308,77 @@ def render():
                         f"Agende aqui: [link]"
                     )
                     review_passed = True
-                    review_notes = "OK — template generico"
+                    review_notes = "Template generico"
 
-        # ─── Step 3: Template Output + Review ─────────────────
+        # ─── Step 3: Template Output ──────────────────────────
         st.divider()
-        st.subheader("3. Template Gerado")
+        _step(3, "Template Gerado")
 
         # WhatsApp-style preview
+        import html as _html
         st.markdown(
-            f"""
-            <div style="background-color: #DCF8C6; padding: 16px; border-radius: 12px;
-                        max-width: 400px; font-family: sans-serif; color: #000;
-                        font-size: 14px; line-height: 1.5;">
-                {template_text}
-            </div>
-            """,
+            f'<div class="ford-whatsapp">{_html.escape(template_text).replace(chr(10), "<br>")}</div>',
             unsafe_allow_html=True,
         )
 
-        # Review status
-        st.divider()
-        st.subheader("4. Reviewer Pass (Guardrail)")
+        # ─── Step 4: Review ───────────────────────────────────
+        st.write("")
+        _step(4, "Reviewer Pass (Guardrail)")
 
         if review_passed:
-            st.success(f"Reviewer: {review_notes}", icon="✅")
-        else:
-            st.error(f"Reviewer: {review_notes}", icon="🚨")
-            st.warning(
-                "Template com numeros nao verificados. "
-                "Necessita revisao humana antes de enviar."
+            st.markdown(
+                f'<div style="display:flex; align-items:center; gap:8px; '
+                f'padding:10px 16px; background:rgba(14,164,122,0.08); '
+                f'border:1px solid rgba(14,164,122,0.2); border-radius:8px; '
+                f'color:#0EA47A; font-size:0.88rem;">'
+                f'✅ <strong>Aprovado</strong> — {review_notes}</div>',
+                unsafe_allow_html=True,
             )
+        else:
+            st.markdown(
+                f'<div style="display:flex; align-items:center; gap:8px; '
+                f'padding:10px 16px; background:rgba(220,53,69,0.08); '
+                f'border:1px solid rgba(220,53,69,0.2); border-radius:8px; '
+                f'color:#DC3545; font-size:0.88rem;">'
+                f'🚨 <strong>Flaggado</strong> — {review_notes}</div>',
+                unsafe_allow_html=True,
+            )
+            st.warning("Template requer revisao humana antes de envio.")
 
-        # ─── Step 4: Human Approval ──────────────────────────
-        st.divider()
-        st.subheader("5. Aprovacao Humana")
+        # ─── Step 5: Human Approval ──────────────────────────
+        st.write("")
+        _step(5, "Aprovacao Humana")
 
         col_a1, col_a2, col_a3 = st.columns(3)
 
         with col_a1:
-            if st.button("Aprovar e Enviar (simulado)", type="primary"):
+            if st.button("Aprovar e Enviar", type="primary", use_container_width=True):
                 st.balloons()
                 st.success(
                     f"Template aprovado para {selected['vehicle_id']}. "
-                    f"Em producao, seria enviado via API WhatsApp Business."
+                    f"Em producao: envio via API WhatsApp Business."
                 )
 
         with col_a2:
-            if st.button("Editar Template"):
+            if st.button("Editar", use_container_width=True):
                 st.session_state[f"editing_{selected_vid}"] = True
 
         with col_a3:
-            if st.button("Rejeitar"):
-                st.warning("Template rejeitado. Sera regenerado com parametros ajustados.")
+            if st.button("Rejeitar", use_container_width=True):
+                st.warning("Template rejeitado. Sera regenerado.")
 
         # Edit mode
         if st.session_state.get(f"editing_{selected_vid}"):
-            edited = st.text_area("Editar template:", value=template_text, height=200)
+            edited = st.text_area("Editar template:", value=template_text, height=150)
             if st.button("Salvar edicao"):
                 st.session_state[f"editing_{selected_vid}"] = False
                 st.success("Template editado salvo.")
 
-    # ─── Footer ───────────────────────────────────────────────
-    st.divider()
-    st.caption(
-        "A Ponte conecta inteligencia competitiva (Modulo 1) com retencao (Modulo 2). "
-        "Guardrails: system prompt restritivo + reviewer pass que compara numeros input vs output. "
-        "Envio real via WhatsApp Business API fora do escopo do MVP."
+    # Footer
+    st.markdown(
+        '<div class="ford-footer">'
+        'A Ponte conecta inteligencia competitiva (Mod. 1) com retencao (Mod. 2). '
+        'Guardrails: prompt restritivo + reviewer numerico + aprovacao humana.'
+        '</div>',
+        unsafe_allow_html=True,
     )

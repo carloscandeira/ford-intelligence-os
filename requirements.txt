@@ -19,6 +19,7 @@ openai>=1.0.0
 # Dashboard
 streamlit>=1.30.0
 plotly>=5.0.0
+fpdf2>=2.7.4
 
 # Scraper
 playwright-stealth>=2.0.0

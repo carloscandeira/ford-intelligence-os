@@ -79,3 +79,14 @@ The system prompt explicitly explains this to prevent LLM from generating vs.pot
 ## Deployment
 - GitHub: https://github.com/carloscandeira/ford-intelligence-os
 - Streamlit Cloud: https://carloscandeira-ford-intelligence-os-appmain-uykdq8.streamlit.app
+
+## Engineering guidelines (general)
+Bias toward caution over speed. For trivial tasks, use judgment.
+
+**1. Think before coding.** State assumptions explicitly; if uncertain, ask. If multiple interpretations exist, present them — don't pick silently. If a simpler approach exists, say so. If something is unclear, stop and name what's confusing.
+
+**2. Simplicity first.** Minimum code that solves the problem, nothing speculative. No features beyond what was asked, no abstractions for single-use code, no unrequested "flexibility", no error handling for impossible scenarios. If 200 lines could be 50, rewrite it.
+
+**3. Surgical changes.** Touch only what you must. Don't "improve" adjacent code, refactor what isn't broken, or restyle to taste — match existing style. Remove orphans YOUR changes created; mention pre-existing dead code instead of deleting it. Every changed line should trace to the request.
+
+**4. Goal-driven execution.** Turn tasks into verifiable goals ("fix the bug" → "write a failing test that reproduces it, then make it pass"). For multi-step work, state a brief plan with a verify step each. Ensure tests pass before and after.
