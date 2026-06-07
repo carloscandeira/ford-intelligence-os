@@ -160,6 +160,7 @@ RULES:
 8. Use ORDER BY marca, modelo, versao for consistent results.
 9. NEVER use JOINs or self-joins. Query FROM vehicle_spec only once.
 10. For multiple campos (ex: preco + potencia + torque), use WHERE campo IN ('preco_sugerido','potencia','torque').
+11. Price campos: 'preco_sugerido' (preco de fabrica) and 'preco_fipe' (Tabela FIPE, referencia oficial). For price questions, prefer campo IN ('preco_sugerido','preco_fipe').
 
 EXAMPLE — "Qual a potencia da Ranger Raptor?":
 SELECT marca, modelo, versao, valor AS potencia, unidade, fonte_url, extraido_em

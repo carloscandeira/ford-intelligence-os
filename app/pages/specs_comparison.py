@@ -11,6 +11,7 @@ import streamlit as st
 import pandas as pd
 
 import os
+from datetime import datetime
 from typing import Optional
 try:
     from sqlalchemy import text
@@ -65,7 +66,7 @@ SPECS_DATA = {
 NUMERIC_FIELDS = {
     "potencia": "higher", "torque": "higher", "capacidade_carga": "higher",
     "entre_eixos": "higher", "comprimento": "higher", "tanque": "higher",
-    "preco_sugerido": "lower",
+    "preco_sugerido": "lower", "preco_fipe": "lower",
 }
 
 FIELD_LABELS = {
@@ -73,18 +74,18 @@ FIELD_LABELS = {
     "transmissao": "Transmissao", "tracao": "Tracao", "capacidade_carga": "Cap. Carga",
     "entre_eixos": "Entre-eixos", "comprimento": "Comprimento",
     "tanque": "Tanque", "preco_sugerido": "Preco (R$)",
-    "preco_concessionaria": "Preco Concessionaria (R$)",
+    "preco_fipe": "Preco FIPE (R$)",
     "autonomia_eletrica": "Autonomia",
 }
 
 FIELD_UNITS = {
     "potencia": "cv", "torque": "kgfm", "capacidade_carga": "kg",
     "entre_eixos": "mm", "comprimento": "mm", "tanque": "L",
-    "preco_sugerido": "R$", "autonomia_eletrica": "km",
+    "preco_sugerido": "R$", "preco_fipe": "R$", "autonomia_eletrica": "km",
 }
 
 FIELD_ORDER = [
-    "preco_sugerido", "potencia", "torque", "motor", "transmissao",
+    "preco_sugerido", "preco_fipe", "potencia", "torque", "motor", "transmissao",
     "tracao", "capacidade_carga", "tanque", "entre_eixos", "comprimento",
     "autonomia_eletrica",
 ]
@@ -96,7 +97,7 @@ def _load_live_data() -> dict:
         rows = conn.execute(text("""
             SELECT marca, modelo, versao, campo, valor, unidade
             FROM vehicle_spec
-            WHERE mercado = 'BR'
+            WHERE mercado = 'BR' AND verificado = TRUE
             ORDER BY marca, modelo, versao, campo
         """)).fetchall()
 
@@ -205,11 +206,29 @@ def render():
     selected_vehicles = [filtered_vehicles[filtered_labels.index(l)] for l in selected_labels]
     selected_specs = {k: specs[k] for k in selected_vehicles}
 
+    # ─── PDF Export button ────────────────────────────────────
+    try:
+        from app.pdf_report import generate_specs_pdf
+        pdf_bytes = generate_specs_pdf(selected_specs, selected_vehicles)
+        st.download_button(
+            "Exportar PDF",
+            data=pdf_bytes,
+            file_name=f"ficha_tecnica_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+            mime="application/pdf",
+            type="primary",
+        )
+    except Exception:
+        st.caption("Exportacao em PDF temporariamente indisponivel.")
+
     # ─── Price chart ──────────────────────────────────────────
     price_data = {}
     for (marca, modelo, versao), vspecs in selected_specs.items():
-        if "preco_sugerido" in vspecs:
-            val = _to_float(vspecs["preco_sugerido"][0])
+        # Preço sugerido de fábrica é o preferido; cai pra FIPE quando ausente.
+        price_field = "preco_sugerido" if "preco_sugerido" in vspecs else (
+            "preco_fipe" if "preco_fipe" in vspecs else None
+        )
+        if price_field:
+            val = _to_float(vspecs[price_field][0])
             if val:
                 label = f"{marca} {modelo} {versao}"
                 price_data[label] = val / 1000
