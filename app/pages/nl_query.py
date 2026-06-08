@@ -58,14 +58,82 @@ ORDER BY marca""",
                 "marca": "Ford", "modelo": "Ranger", "versao": "Limited",
                 "torque": "61,2", "unidade": "kgfm",
                 "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882",
-                "extraido_em": "2026-03-30",
+                "extraido_em": "2026-03-31",
             },
             {
                 "marca": "Toyota", "modelo": "Hilux", "versao": "SRX",
-                "torque": "50.9", "unidade": "kgfm",
+                "torque": "42,8", "unidade": "kgfm",
                 "fonte_url": "https://www.toyota.com.br/modelos/hilux-cabine-dupla",
-                "extraido_em": "2026-03-30",
+                "extraido_em": "2026-06-03",
             },
+        ],
+    },
+    # ── Botões de exemplo (EXAMPLE_QUESTIONS) — dados reais do banco ──
+    "Compare todas as versoes do Ranger": {
+        "sql": """SELECT versao, valor AS potencia, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE marca = 'Ford' AND modelo = 'Ranger' AND campo = 'potencia' AND mercado = 'BR'
+ORDER BY CAST(valor AS INTEGER)""",
+        "data": [
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Black", "potencia (cv)": "170", "torque (kgfm)": "41,3", "preco (R$)": "219.990", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=37251", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "XLS", "potencia (cv)": "170", "torque (kgfm)": "41,3", "preco (R$)": "267.000", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Limited", "potencia (cv)": "250", "torque (kgfm)": "61,2", "preco (R$)": "330.300", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "potencia (cv)": "397", "torque (kgfm)": "59,4", "preco (R$)": "490.000", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+        ],
+    },
+    "Qual o preco de todas as pickups?": {
+        "sql": """SELECT marca, modelo, versao, valor AS preco, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE campo = 'preco_fipe' AND mercado = 'BR'
+ORDER BY CAST(valor AS INTEGER) DESC""",
+        "data": [
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor 3.0 V6 Bi-Turbo 4WD", "preco (R$)": "495.991", "fonte": "Tabela FIPE", "fonte_url": "https://veiculos.fipe.org.br", "extraido_em": "2026-06-03"},
+            {"marca": "Volkswagen", "modelo": "Amarok", "versao": "Highline CD 3.0 4x4 TB Diesel", "preco (R$)": "371.748", "fonte": "Tabela FIPE", "fonte_url": "https://veiculos.fipe.org.br", "extraido_em": "2026-06-03"},
+            {"marca": "Toyota", "modelo": "Hilux", "versao": "CD SRX Plus 4x4 2.8 TDI", "preco (R$)": "348.475", "fonte": "Tabela FIPE", "fonte_url": "https://veiculos.fipe.org.br", "extraido_em": "2026-06-03"},
+            {"marca": "Mitsubishi", "modelo": "Triton", "versao": "L200 Sport GLS 2.4 CD Diesel", "preco (R$)": "205.918", "fonte": "Tabela FIPE", "fonte_url": "https://veiculos.fipe.org.br", "extraido_em": "2026-06-03"},
+        ],
+    },
+    "Ranger vs Hilux vs Amarok": {
+        "sql": """SELECT marca, modelo, versao, campo, valor, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE campo IN ('potencia', 'torque') AND mercado = 'BR'
+AND ((marca='Ford' AND modelo='Ranger') OR (marca='Toyota' AND modelo='Hilux')
+  OR (marca='Volkswagen' AND modelo='Amarok'))
+ORDER BY marca""",
+        "data": [
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "potencia (cv)": "397", "torque (kgfm)": "59,4", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Toyota", "modelo": "Hilux", "versao": "SRX", "potencia (cv)": "204", "torque (kgfm)": "42,8", "fonte_url": "https://www.toyota.com.br/modelos/hilux-cabine-dupla", "extraido_em": "2026-06-03"},
+            {"marca": "Volkswagen", "modelo": "Amarok", "versao": "Highline V6", "potencia (cv)": "258", "torque (kgfm)": "59,1", "fonte_url": "https://www.vw.com.br/pt/carros/amarok.html", "extraido_em": "2026-06-03"},
+        ],
+    },
+    "Maior capacidade de carga?": {
+        "sql": """SELECT marca, modelo, versao, valor AS capacidade_carga, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE campo = 'capacidade_carga' AND mercado = 'BR'
+ORDER BY CAST(REPLACE(valor, '.', '') AS INTEGER) DESC""",
+        "data": [
+            {"marca": "Volkswagen", "modelo": "Amarok", "versao": "Highline V6", "capacidade_carga (kg)": "1.280", "fonte_url": "https://www.vw.com.br/pt/carros/amarok.html", "extraido_em": "2026-06-03"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "XLS", "capacidade_carga (kg)": "1.037", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35868", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Limited", "capacidade_carga (kg)": "1.023", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35882", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "capacidade_carga (kg)": "736", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Toyota", "modelo": "Hilux", "versao": "STD Power Pack", "capacidade_carga (kg)": "720", "fonte_url": "https://www.toyota.com.br/modelos/hilux-cabine-dupla", "extraido_em": "2026-06-03"},
+        ],
+    },
+    "Specs do Ranger Raptor": {
+        "sql": """SELECT marca, modelo, versao, campo, valor, unidade, fonte_url, extraido_em
+FROM vehicle_spec
+WHERE marca = 'Ford' AND modelo = 'Ranger' AND versao = 'Raptor' AND mercado = 'BR'
+ORDER BY campo""",
+        "data": [
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "potencia", "valor": "397", "unidade": "cv", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "torque", "valor": "59,4", "unidade": "kgfm", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "motor", "valor": "V6 3.0 EcoBoost Gasolina Biturbo", "unidade": "", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "transmissao", "valor": "Automatica 10 velocidades", "unidade": "", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "tracao", "valor": "4x4 integral sob demanda", "unidade": "", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "capacidade_carga", "valor": "736", "unidade": "kg", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "tanque", "valor": "82", "unidade": "litros", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "entre_eixos", "valor": "3270", "unidade": "mm", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
+            {"marca": "Ford", "modelo": "Ranger", "versao": "Raptor", "campo": "comprimento", "valor": "5360", "unidade": "mm", "fonte_url": "https://www.carrosnaweb.com.br/fichadetalhe.asp?codigo=35947", "extraido_em": "2026-03-31"},
         ],
     },
 }
@@ -137,7 +205,11 @@ def render():
             else:
                 sql = f"-- [DEMO] SQL seria gerado pelo LLM para: {question}"
                 data = []
-                error = None
+                error = (
+                    "Modo demonstracao: respostas pre-carregadas apenas para as "
+                    "perguntas de exemplo acima. Conecte o banco (DATABASE_URL) e a "
+                    "OPENAI_API_KEY para consultar qualquer pergunta ao vivo."
+                )
 
     # ─── Results ──────────────────────────────────────────────
     st.divider()
