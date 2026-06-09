@@ -35,18 +35,38 @@ def main():
     from db.connection import init_db
     init_db()
 
-    # Step 2: Generate synthetic data
-    print("\n[2/4] Generating synthetic data...")
-    from data.synthetic.generate_synthetic import generate_specs_csv, generate_retention_csv
-    generate_specs_csv()
-    generate_retention_csv()
+    # Step 2 + 3: Load REAL data (270+ scraped specs incl. FIPE prices, retention fleet)
+    # from the committed seed dump. Falls back to synthetic if the seed is missing.
+    from sqlalchemy import text
+    from db.connection import engine
 
-    # Step 3: Load data
-    print("\n[3/4] Loading data...")
-    from ingestion.load_data import load_specs_csv, load_retention_csv
-    data_dir = os.path.join(os.path.dirname(__file__), "..", "data", "synthetic")
-    load_specs_csv(os.path.join(data_dir, "vehicle_specs.csv"))
-    load_retention_csv(os.path.join(data_dir, "retention_vehicles.csv"))
+    seed_path = os.path.join(os.path.dirname(__file__), "..", "data", "seed", "real_seed.sql")
+    if os.path.exists(seed_path):
+        print("\n[2/4] Loading REAL seed data (data/seed/real_seed.sql)...")
+        with open(seed_path, encoding="utf-8") as f:
+            # Strip psql-only meta-commands (\restrict / \unrestrict from
+            # pg_dump 16+) — they are not SQL and break the DB driver.
+            seed_sql = "\n".join(
+                ln for ln in f.read().splitlines() if not ln.lstrip().startswith("\\")
+            )
+        with engine.begin() as conn:
+            # Idempotent: clear before loading so re-runs don't conflict on the
+            # vehicle_spec unique key (marca, modelo, versao, mercado, campo).
+            conn.exec_driver_sql(
+                "TRUNCATE TABLE vehicle_spec, retention_vehicles RESTART IDENTITY CASCADE;"
+            )
+            conn.exec_driver_sql(seed_sql)
+        print("\n[3/4] Real data loaded.")
+    else:
+        print("\n[2/4] No real seed found — generating synthetic data...")
+        from data.synthetic.generate_synthetic import generate_specs_csv, generate_retention_csv
+        generate_specs_csv()
+        generate_retention_csv()
+        print("\n[3/4] Loading synthetic data...")
+        from ingestion.load_data import load_specs_csv, load_retention_csv
+        data_dir = os.path.join(os.path.dirname(__file__), "..", "data", "synthetic")
+        load_specs_csv(os.path.join(data_dir, "vehicle_specs.csv"))
+        load_retention_csv(os.path.join(data_dir, "retention_vehicles.csv"))
 
     # Step 4: Score
     print("\n[4/4] Running churn scorer...")

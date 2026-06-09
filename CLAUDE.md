@@ -79,6 +79,21 @@ The system prompt explicitly explains this to prevent LLM from generating vs.pot
 ## Deployment
 - GitHub: https://github.com/carloscandeira/ford-intelligence-os
 - Streamlit Cloud: https://carloscandeira-ford-intelligence-os-appmain-uykdq8.streamlit.app
+- Streamlit Cloud auto-deploys on push to `main`. Free tier sleeps when idle — first visit wakes + rebuilds (~1-3 min).
+
+### Demo mode vs Live mode
+Without `DATABASE_URL`, the app runs in demo mode: each tab falls back to representative
+data (NL query uses pre-built answers in `DEMO_RESULTS`, keyed by the example buttons).
+This is what runs on Streamlit Cloud today.
+
+To go fully live (NL query answers any question via LLM):
+1. Host PostgreSQL (Railway/Neon/Supabase), copy its `DATABASE_URL`.
+2. In Streamlit Cloud → Settings → Secrets, set `DATABASE_URL`, `OPENAI_API_KEY`, `LLM_MODEL`.
+3. Seed the hosted DB with the REAL data: `railway run python scripts/setup_railway.py`
+   (loads `data/seed/real_seed.sql` — 290 specs incl. FIPE prices + 100 retention vehicles —
+   then re-scores). Falls back to synthetic data if the seed file is missing.
+   Regenerate the seed from a local DB with:
+   `pg_dump "$DATABASE_URL" --data-only --no-owner --inserts --table=vehicle_spec --table=retention_vehicles > data/seed/real_seed.sql`
 
 ## Engineering guidelines (general)
 Bias toward caution over speed. For trivial tasks, use judgment.
