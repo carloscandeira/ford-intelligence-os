@@ -19,3 +19,4 @@ package-lock.json
 
 # Local dev tooling (Claude preview config)
 .claude/
+.gstack/
