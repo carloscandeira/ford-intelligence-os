@@ -214,19 +214,6 @@ def render():
     # ─── Results ──────────────────────────────────────────────
     st.divider()
 
-    # Show generated SQL (collapsible)
-    with st.expander("SQL Gerado", expanded=False):
-        st.code(sql, language="sql")
-        if LIVE_MODE:
-            is_safe, reason = sanitize_sql(sql)
-            if is_safe:
-                st.markdown(
-                    '<span class="ford-badge ford-badge-live">SQL seguro (apenas SELECT)</span>',
-                    unsafe_allow_html=True,
-                )
-            else:
-                st.warning(f"Validacao: {reason}")
-
     # Show results
     if error:
         st.error(f"Erro: {error}")
@@ -262,6 +249,21 @@ def render():
                             f'🔗 {safe_url}</a>',
                             unsafe_allow_html=True,
                         )
+
+        # Technical detail: generated SQL, hidden behind a discreet toggle so the
+        # default view stays clean. Off by default.
+        st.write("")
+        if st.toggle("Ver SQL tecnico", value=False, key="show_sql"):
+            st.code(sql, language="sql")
+            if LIVE_MODE:
+                is_safe, reason = sanitize_sql(sql)
+                if is_safe:
+                    st.markdown(
+                        '<span class="ford-badge ford-badge-live">SQL seguro (apenas SELECT)</span>',
+                        unsafe_allow_html=True,
+                    )
+                else:
+                    st.warning(f"Validacao: {reason}")
     else:
         st.warning("Nenhum resultado encontrado para essa consulta.")
 
