@@ -221,15 +221,13 @@ def render():
         df = pd.DataFrame(data)
         st.dataframe(df, use_container_width=True, hide_index=True)
 
-        # Metrics row
-        col_res, col_date, col_space = st.columns([1, 1, 2])
-        with col_res:
-            st.metric("Resultados", len(data))
-        with col_date:
-            if "extraido_em" in df.columns:
-                datas = df["extraido_em"].dropna().unique()
-                if len(datas) > 0:
-                    st.metric("Capturado em", str(datas[0])[:10])
+        # Subtle summary line (replaces the big metric cards)
+        resumo = f"{len(data)} resultado{'s' if len(data) != 1 else ''}"
+        if "extraido_em" in df.columns:
+            datas = df["extraido_em"].dropna().unique()
+            if len(datas) > 0:
+                resumo += f" · capturado em {str(datas[0])[:10]}"
+        st.caption(resumo)
 
         # Source attribution
         if "fonte_url" in df.columns:
