@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 8PaDuaWGXbNRLV4eCKBj9W2pQPkHz02X07K6q8pJ6kw8RU1jqG2RSjohGGoxv4H
+\restrict VodCTE0fAwyNh1IepxexRvnAX5zwbIryeVrFZOfmXS2xdM0dtc1J0wjR86ITk2r
 
 -- Dumped from database version 16.13 (Homebrew)
 -- Dumped by pg_dump version 16.13 (Homebrew)
@@ -344,30 +344,6 @@ INSERT INTO public.vehicle_spec VALUES (405, 'Toyota', 'Hilux', 'STD Power Pack'
 INSERT INTO public.vehicle_spec VALUES (406, 'Toyota', 'Hilux', 'STD Power Pack', 'BR', 'entre_eixos', '3085', 'mm', 'https://www.toyota.com.br/modelos/hilux-cabine-dupla', '2026-03-31 00:00:00', true, '2026-03-31 20:17:41.490735', '2026-03-31 20:17:41.490735');
 INSERT INTO public.vehicle_spec VALUES (407, 'Toyota', 'Hilux', 'STD Power Pack', 'BR', 'comprimento', '5325', 'mm', 'https://www.toyota.com.br/modelos/hilux-cabine-dupla', '2026-03-31 00:00:00', true, '2026-03-31 20:17:41.490735', '2026-03-31 20:17:41.490735');
 INSERT INTO public.vehicle_spec VALUES (408, 'Toyota', 'Hilux', 'STD Power Pack', 'BR', 'tanque', '80', 'litros', 'https://www.toyota.com.br/modelos/hilux-cabine-dupla', '2026-03-31 00:00:00', true, '2026-03-31 20:17:41.490735', '2026-03-31 20:17:41.490735');
-INSERT INTO public.vehicle_spec VALUES (409, 'Ford', 'Ranger', 'Black 2.0 4x2', 'BR', 'preco_sugerido', '219990', 'BRL', 'https://www.webmotors.com.br/ford/ranger/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (410, 'Ford', 'Ranger', 'XL 2.0 4x4', 'BR', 'preco_sugerido', '247400', 'BRL', 'https://www.webmotors.com.br/ford/ranger/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (411, 'Ford', 'Ranger', 'XLS 2.0 4x4', 'BR', 'preco_sugerido', '267000', 'BRL', 'https://www.webmotors.com.br/ford/ranger/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (412, 'Ford', 'Ranger', 'XLS V6 4x4', 'BR', 'preco_sugerido', '292900', 'BRL', 'https://www.webmotors.com.br/ford/ranger/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (413, 'Ford', 'Ranger', 'XLT V6 4x4', 'BR', 'preco_sugerido', '298700', 'BRL', 'https://www.webmotors.com.br/ford/ranger/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (414, 'Ford', 'Ranger', 'Limited V6 4x4', 'BR', 'preco_sugerido', '330300', 'BRL', 'https://www.webmotors.com.br/ford/ranger/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (415, 'Ford', 'Ranger', 'Raptor V6', 'BR', 'preco_sugerido', '490000', 'BRL', 'https://www.webmotors.com.br/ford/ranger/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (416, 'Toyota', 'Hilux', 'Power Pack 4x4 MT', 'BR', 'preco_sugerido', '278790', 'BRL', 'https://www.webmotors.com.br/toyota/hilux/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (417, 'Toyota', 'Hilux', 'Power Pack 4x4 AT', 'BR', 'preco_sugerido', '288990', 'BRL', 'https://www.webmotors.com.br/toyota/hilux/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (418, 'Toyota', 'Hilux', 'SR 4x4 AT', 'BR', 'preco_sugerido', '306090', 'BRL', 'https://www.webmotors.com.br/toyota/hilux/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (419, 'Toyota', 'Hilux', 'SRV 4x4 AT', 'BR', 'preco_sugerido', '309590', 'BRL', 'https://www.webmotors.com.br/toyota/hilux/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (420, 'Toyota', 'Hilux', 'SRX 4x4 AT', 'BR', 'preco_sugerido', '342390', 'BRL', 'https://www.webmotors.com.br/toyota/hilux/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (421, 'Toyota', 'Hilux', 'SRX Plus 4x4 AT', 'BR', 'preco_sugerido', '353290', 'BRL', 'https://www.webmotors.com.br/toyota/hilux/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (422, 'Volkswagen', 'Amarok', 'Comfortline V6 4x4', 'BR', 'preco_sugerido', '278176', 'BRL', 'https://www.mobiauto.com.br/catalogo/carros/volkswagen/amarok/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (423, 'Volkswagen', 'Amarok', 'Highline V6 4x4', 'BR', 'preco_sugerido', '302370', 'BRL', 'https://www.mobiauto.com.br/catalogo/carros/volkswagen/amarok/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (424, 'Volkswagen', 'Amarok', 'Extreme V6 4x4', 'BR', 'preco_sugerido', '335500', 'BRL', 'https://www.mobiauto.com.br/catalogo/carros/volkswagen/amarok/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (425, 'Mitsubishi', 'Triton', 'GLS 4x4 AT', 'BR', 'preco_sugerido', '265990', 'BRL', 'https://www.webmotors.com.br/mitsubishi/triton/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (426, 'Mitsubishi', 'Triton', 'HPE 4x4 AT', 'BR', 'preco_sugerido', '284990', 'BRL', 'https://www.webmotors.com.br/mitsubishi/triton/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (427, 'Mitsubishi', 'Triton', 'HPE-S 4x4 AT', 'BR', 'preco_sugerido', '314990', 'BRL', 'https://www.webmotors.com.br/mitsubishi/triton/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (428, 'Mitsubishi', 'Triton', 'Katana 4x4 AT', 'BR', 'preco_sugerido', '329990', 'BRL', 'https://www.webmotors.com.br/mitsubishi/triton/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (429, 'Mitsubishi', 'L200 Triton', 'GLS', 'BR', 'preco_sugerido', '238990', 'BRL', 'https://www.mobiauto.com.br/catalogo/carros/mitsubishi/l200-triton-sport/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (430, 'Mitsubishi', 'L200 Triton', 'Savana', 'BR', 'preco_sugerido', '245990', 'BRL', 'https://www.mobiauto.com.br/catalogo/carros/mitsubishi/l200-triton-savana/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (431, 'Mitsubishi', 'L200 Triton', 'HPE', 'BR', 'preco_sugerido', '279990', 'BRL', 'https://www.mobiauto.com.br/catalogo/carros/mitsubishi/l200-triton-sport/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
-INSERT INTO public.vehicle_spec VALUES (432, 'Mitsubishi', 'L200 Triton', 'HPE-S', 'BR', 'preco_sugerido', '308990', 'BRL', 'https://www.mobiauto.com.br/catalogo/carros/mitsubishi/l200-triton-sport/2025', '2026-03-31 00:00:00', true, '2026-03-31 20:27:15.88453', '2026-03-31 20:27:15.88453');
 INSERT INTO public.vehicle_spec VALUES (530, 'Mitsubishi', 'Nova Triton', 'Principal', 'BR', 'preco_sugerido', '349890', 'BRL', 'https://www.mitsubishimotors.com.br/picapes/nova-triton/', '2026-06-03 00:00:00', true, '2026-06-03 00:09:50.485174', '2026-06-03 00:09:50.485174');
 INSERT INTO public.vehicle_spec VALUES (365, 'Mitsubishi', 'Nova Triton', 'Principal', 'BR', 'potencia', '205', 'cv', 'https://www.mitsubishimotors.com.br/picapes/nova-triton/', '2026-06-03 00:00:00', true, '2026-03-31 12:21:36.3921', '2026-06-03 00:09:50.485174');
 INSERT INTO public.vehicle_spec VALUES (366, 'Mitsubishi', 'Nova Triton', 'Principal', 'BR', 'torque', '47,9', 'kgfm', 'https://www.mitsubishimotors.com.br/picapes/nova-triton/', '2026-06-03 00:00:00', true, '2026-03-31 12:21:36.3921', '2026-06-03 00:09:50.485174');
@@ -474,5 +450,5 @@ SELECT pg_catalog.setval('public.vehicle_spec_id_seq', 635, true);
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 8PaDuaWGXbNRLV4eCKBj9W2pQPkHz02X07K6q8pJ6kw8RU1jqG2RSjohGGoxv4H
+\unrestrict VodCTE0fAwyNh1IepxexRvnAX5zwbIryeVrFZOfmXS2xdM0dtc1J0wjR86ITk2r
 
