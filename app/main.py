@@ -50,7 +50,7 @@ FORD_CSS = """
     --ford-blue-dark: #001A3A;
     --ford-accent: #00A3E0;
     --ford-accent-soft: rgba(0, 163, 224, 0.12);
-    --ford-surface: #FAFBFD;
+    --ford-surface: #F7F9FC;
     --ford-card: #FFFFFF;
     --ford-border: #E8ECF1;
     --ford-text: #1A1A2E;
@@ -63,6 +63,28 @@ FORD_CSS = """
     --shadow-md: 0 4px 12px rgba(0,20,60,0.08), 0 2px 4px rgba(0,20,60,0.04);
     --shadow-lg: 0 8px 24px rgba(0,20,60,0.10), 0 4px 8px rgba(0,20,60,0.04);
 }
+
+/* Typography base — Inter everywhere, crisp rendering */
+html, body, [data-testid="stAppViewContainer"], .stMarkdown, button, input, textarea {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Main canvas */
+[data-testid="stAppViewContainer"] {
+    background: var(--ford-surface) !important;
+}
+.block-container {
+    padding-top: 1.4rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 1180px !important;
+}
+
+/* Hide Streamlit chrome for a clean presentation */
+#MainMenu, footer, [data-testid="stDecoration"] { display: none !important; }
+[data-testid="stHeader"] { background: transparent !important; }
+[data-testid="stToolbar"] { right: 0.5rem !important; }
 
 /* ── Sidebar ───────────────────────────────────────────── */
 [data-testid="stSidebar"] {
@@ -107,10 +129,10 @@ FORD_CSS = """
 
 /* ── Page Header ───────────────────────────────────────── */
 .ford-header {
-    background: var(--ford-blue);
-    padding: 1.25rem 1.75rem;
+    background: linear-gradient(120deg, var(--ford-blue-dark) 0%, var(--ford-blue) 55%, var(--ford-blue-mid) 100%);
+    padding: 1.5rem 2rem 1.4rem;
     border-radius: var(--radius);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.6rem;
     box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
@@ -118,25 +140,31 @@ FORD_CSS = """
 .ford-header::before {
     content: '';
     position: absolute;
-    top: 0; right: 0;
-    width: 200px; height: 100%;
-    background: linear-gradient(135deg, transparent 0%, rgba(0,163,224,0.15) 100%);
-    border-radius: 0 var(--radius) var(--radius) 0;
+    top: -40%; right: -5%;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(0,163,224,0.22) 0%, transparent 65%);
+}
+.ford-header::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ford-accent) 0%, transparent 70%);
 }
 .ford-header h1 {
     color: white !important;
     margin: 0 !important;
-    font-size: 1.55rem !important;
+    font-size: 1.6rem !important;
     font-weight: 700 !important;
-    letter-spacing: 0.3px;
+    letter-spacing: -0.01em;
     position: relative;
     z-index: 1;
 }
 .ford-header .ford-subtitle {
     color: rgba(255,255,255,0.55);
-    font-size: 0.82rem;
-    font-weight: 400;
-    letter-spacing: 0.8px;
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 1.6px;
     text-transform: uppercase;
     position: relative;
     z-index: 1;
@@ -182,26 +210,47 @@ FORD_CSS = """
 
 /* ── Buttons ───────────────────────────────────────────── */
 .stButton > button {
-    border-radius: 8px !important;
+    border-radius: 999px !important;
     font-weight: 500 !important;
-    transition: all 0.15s ease !important;
+    font-size: 0.85rem !important;
+    transition: all 0.18s ease !important;
     border: 1px solid var(--ford-border) !important;
+    background: var(--ford-card) !important;
+    color: var(--ford-text-secondary) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+.stButton > button:hover {
+    border-color: var(--ford-accent) !important;
+    color: var(--ford-blue) !important;
+    box-shadow: var(--shadow-md) !important;
+    transform: translateY(-1px) !important;
 }
 .stButton > button[kind="primary"] {
     background: var(--ford-blue) !important;
     border-color: var(--ford-blue) !important;
     color: white !important;
-    box-shadow: 0 2px 4px rgba(0,52,120,0.25) !important;
+    box-shadow: 0 2px 6px rgba(0,52,120,0.28) !important;
 }
 .stButton > button[kind="primary"]:hover {
     background: var(--ford-blue-mid) !important;
     border-color: var(--ford-blue-mid) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 8px rgba(0,52,120,0.3) !important;
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(0,52,120,0.32) !important;
 }
-.stButton > button[kind="secondary"]:hover {
+
+/* ── Text input (search bar) ───────────────────────────── */
+.stTextInput input {
+    border-radius: 10px !important;
+    border: 1px solid var(--ford-border) !important;
+    background: var(--ford-card) !important;
+    padding: 0.7rem 1rem !important;
+    font-size: 0.92rem !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.stTextInput input:focus {
     border-color: var(--ford-accent) !important;
-    color: var(--ford-accent) !important;
+    box-shadow: 0 0 0 3px var(--ford-accent-soft) !important;
 }
 
 /* ── Data Tables ───────────────────────────────────────── */
@@ -210,6 +259,13 @@ FORD_CSS = """
     overflow: hidden;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--ford-border) !important;
+}
+.stDataFrame [data-testid="stDataFrameResizable"] { background: var(--ford-card) !important; }
+
+/* ── Toggle / checkbox accents ─────────────────────────── */
+.stToggle label p, .stCheckbox label p {
+    font-size: 0.8rem !important;
+    color: var(--ford-text-secondary) !important;
 }
 
 /* ── Expanders ─────────────────────────────────────────── */
@@ -408,13 +464,17 @@ NAV_ITEMS = {
 }
 
 with st.sidebar:
-    # Brand mark
+    # Brand mark — Ford oval
     st.markdown(
         '<div style="text-align:center; padding: 1.2rem 0 0.4rem 0;">'
-        '<div style="font-size: 1.8rem; font-weight: 800; color: white; '
-        'letter-spacing: 3px; line-height: 1;">FORD</div>'
-        '<div style="font-size: 0.7rem; color: rgba(255,255,255,0.45); '
-        'letter-spacing: 3px; text-transform: uppercase; margin-top: 4px;">Intelligence OS</div>'
+        '<div style="display:inline-flex; align-items:center; justify-content:center; '
+        'width:120px; height:48px; border:2px solid rgba(255,255,255,0.85); '
+        'border-radius:50%; margin-bottom:8px;">'
+        '<span style="font-size:1.35rem; font-weight:800; color:white; '
+        'letter-spacing:4px; font-style:italic; line-height:1; padding-left:4px;">FORD</span>'
+        '</div>'
+        '<div style="font-size: 0.66rem; color: rgba(255,255,255,0.45); '
+        'letter-spacing: 3.5px; text-transform: uppercase;">Intelligence OS</div>'
         '</div>',
         unsafe_allow_html=True,
     )
