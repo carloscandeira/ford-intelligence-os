@@ -508,10 +508,10 @@ with st.sidebar:
     )
 
     sources = [
+        ("Ford", "oficial (PDF)*", True),
         ("VW", "vw.com.br", True),
         ("Toyota", "toyota.com.br", True),
         ("Mitsubishi", "oficial", True),
-        ("Ford", "carrosnaweb*", False),
     ]
     for brand, source, ok in sources:
         icon = "check_circle" if ok else "warning"
@@ -527,7 +527,8 @@ with st.sidebar:
 
     st.markdown(
         '<div style="font-size:0.65rem; color:rgba(255,255,255,0.3); margin-top:6px;">'
-        '*ford.com.br bloqueia scraping (WAF)</div>',
+        '*Ranger: ficha tecnica oficial Ford (PDF). Demais modelos Ford: '
+        'carrosnaweb (site bloqueia scraping)</div>',
         unsafe_allow_html=True,
     )
 

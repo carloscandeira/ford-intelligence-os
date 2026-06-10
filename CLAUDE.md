@@ -47,7 +47,7 @@ Two-step dynamic scraper (`scraper/smart_scraper.py`):
 
 Brands covered: VW (11 models), Toyota (15 models), Mitsubishi (1), Ford (blocked — see below)
 
-**Ford.com.br anti-bot:** ford.com.br uses Cloudflare WAF that returns 403 for all headless browsers. Ford data is sourced from carrosnaweb.com.br (public FIPE ficha tecnica). In production, use Ford Developer Portal API instead.
+**Ford.com.br anti-bot:** ford.com.br uses Cloudflare WAF that returns 403 for all headless browsers (HTML pages, DAM PDFs and even media.ford.com press room). BUT: the official ficha tecnica PDFs live on an open Azure blob CDN (`weupreviewimagesprd.blob.core.windows.net/br1001/siteassets/...`), indexed by Google. `scripts/load_ford_oficial.py` loads the official Ranger MY2026 table (6 versions x 9 campos, fonte = official PDF). Other Ford models still come from carrosnaweb.com.br (public FIPE ficha tecnica).
 
 ## Environment
 Requires `.env` with: `DATABASE_URL`, `OPENAI_API_KEY`, `LLM_MODEL`
@@ -59,7 +59,7 @@ LLM_MODEL=gpt-5.4-nano
 PostgreSQL with 4 tables: `vehicle_spec`, `spec_changes`, `retention_vehicles`, `templates_gerados`.
 Schema at `db/schema.sql`.
 
-Current state: ~94 specs (Ford 36 real + scraped VW/Toyota/Mitsubishi), 100 retention vehicles.
+Current state: ~326 specs (Ford: 54 oficiais via PDF + carrosnaweb; VW/Toyota/Mitsubishi scraped; 20 precos FIPE), 100 retention vehicles.
 
 ## NL Query — EAV model (IMPORTANT)
 The vehicle_spec table uses Entity-Attribute-Value model.
