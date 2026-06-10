@@ -13,7 +13,7 @@ Validation rules (from /plan-eng-review Issue 4A):
 
 import csv
 import os
-from datetime import date, datetime
+from datetime import date
 from typing import Optional
 
 from sqlalchemy import text

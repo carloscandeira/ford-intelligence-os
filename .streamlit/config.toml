@@ -6,3 +6,14 @@ gatherUsageStats = false
 
 [client]
 showSidebarNavigation = false
+toolbarMode = "minimal"
+
+# Ford brand theme — pinned so every visitor sees the intended light palette
+# (without this, Streamlit follows the visitor's OS dark mode and the design breaks)
+[theme]
+base = "light"
+primaryColor = "#003478"
+backgroundColor = "#F7F9FC"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1A1A2E"
+font = "sans serif"

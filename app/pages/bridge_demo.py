@@ -14,24 +14,18 @@ Flow:
 
 import streamlit as st
 import pandas as pd
-from datetime import date
 
 # Try to import real modules
 import os
 try:
     from bridge.template_generator import (
         TemplateInput,
-        TemplateOutput,
         get_bridge_data,
         generate_and_review,
-        _fallback_template,
-        review_template,
     )
     BRIDGE_AVAILABLE = bool(os.getenv("DATABASE_URL")) and bool(os.getenv("OPENAI_API_KEY"))
 except Exception:
     BRIDGE_AVAILABLE = False
-
-from scoring.churn_scorer import VehicleData, calculate_churn_score
 
 
 # ─────────────────────────────────────────────────────────────
