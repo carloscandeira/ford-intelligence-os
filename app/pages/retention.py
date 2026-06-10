@@ -176,6 +176,59 @@ def render():
     with col4:
         st.metric("Score Medio", f"{avg_score:.0f}/100")
 
+    # ─── Impacto Financeiro (ROI) ─────────────────────────────
+    # Converte o risco em dinheiro: clientes de alto risco recuperados via
+    # contato proativo viram receita de servico que deixaria a rede.
+    st.write("")
+    st.markdown('<span class="ford-section-title">Impacto Financeiro</span>', unsafe_allow_html=True)
+
+    col_a, col_b, col_c, col_res = st.columns([1, 1, 1, 2])
+    with col_a:
+        conv = st.slider(
+            "Conversao do contato (%)", 5, 50, 20,
+            help="Percentual dos clientes de alto risco que voltam a "
+                 "concessionaria apos o contato proativo via WhatsApp",
+        )
+    with col_b:
+        ticket = st.number_input(
+            "Ticket medio de servico (R$)", min_value=200, max_value=5000,
+            value=1100, step=100,
+        )
+    with col_c:
+        visitas = st.number_input(
+            "Visitas/ano (cliente retido)", min_value=1.0, max_value=4.0,
+            value=1.5, step=0.5,
+        )
+
+    recuperados = len(high_risk) * conv / 100
+    receita_ano = recuperados * ticket * visitas
+
+    def _brl(v):
+        return f"R$ {v:,.0f}".replace(",", ".")
+
+    with col_res:
+        st.markdown(
+            f'<div class="ford-card" style="text-align:center; padding:0.9rem 1rem;">'
+            f'<div style="font-size:0.7rem; color:var(--ford-text-secondary); '
+            f'text-transform:uppercase; letter-spacing:1.2px;">Receita de servico protegida / ano</div>'
+            f'<div style="font-size:1.85rem; font-weight:800; color:var(--ford-blue); '
+            f'line-height:1.3;">{_brl(receita_ano)}</div>'
+            f'<div style="font-size:0.76rem; color:var(--ford-text-secondary);">'
+            f'~{recuperados:.0f} de {len(high_risk)} clientes de alto risco recuperados</div>'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+
+    receita_100k = (receita_ano / len(results)) * 100_000 if results else 0
+    # st.caption renderiza markdown: '$' sem escape vira modo LaTeX
+    st.caption(
+        f"Formula: {len(high_risk)} clientes de alto risco x {conv}% de conversao x "
+        f"{_brl(ticket)} de ticket x {visitas:g} visitas/ano. Custo do contato (WhatsApp): "
+        "proximo de zero. Premissas editaveis — calibrar com dados reais da rede Ford. "
+        f"Extrapolacao linear: a cada 100 mil veiculos monitorados, "
+        f"~{_brl(receita_100k)}/ano em receita de servico protegida.".replace("R$", "R\\$")
+    )
+
     # ─── Distribution chart + Filters in columns ──────────────
     st.write("")
     col_chart, col_filters = st.columns([2, 1])
