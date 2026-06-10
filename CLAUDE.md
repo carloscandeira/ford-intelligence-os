@@ -59,7 +59,7 @@ LLM_MODEL=gpt-5.4-nano
 PostgreSQL with 4 tables: `vehicle_spec`, `spec_changes`, `retention_vehicles`, `templates_gerados`.
 Schema at `db/schema.sql`.
 
-Current state: ~326 specs (Ford: 54 oficiais via PDF + carrosnaweb; VW/Toyota/Mitsubishi scraped; 20 precos FIPE), 100 retention vehicles.
+Current state: ~302 specs (Ford: 54 oficiais via PDF + carrosnaweb; VW/Toyota/Mitsubishi scraped; precos: FIPE-only, refreshed monthly via scraper Etapa 3), 100 retention vehicles.
 
 ## NL Query — EAV model (IMPORTANT)
 The vehicle_spec table uses Entity-Attribute-Value model.
