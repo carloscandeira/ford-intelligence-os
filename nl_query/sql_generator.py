@@ -158,8 +158,13 @@ RULES:
 6. Always include fonte_url and extraido_em for traceability.
 7. Respond ONLY with the SQL query. No explanation. No markdown. No code fences.
 8. Use ORDER BY marca, modelo, versao for consistent results.
-9. NEVER use JOINs or self-joins. Query FROM vehicle_spec only once.
-10. For multiple campos (ex: preco + potencia + torque), use WHERE campo IN ('preco_sugerido','potencia','torque').
+9. Self-joins of vehicle_spec ARE allowed to combine campos of the same vehicle
+   (one alias per campo, joined ON marca, modelo, mercado). Every alias you
+   reference MUST appear in FROM/JOIN. Never join any table other than vehicle_spec.
+   IMPORTANT: versao strings differ across data sources (ex: 'Black' vs
+   'Black 2.0 4x2' vs 'Black 2.0 4x2 CD TB Diesel Aut.'). When joining campos,
+   match versions by prefix: b.versao ILIKE a.versao || '%' — never strict equality.
+10. For simply LISTING multiple campos, prefer rows: WHERE campo IN ('preco_sugerido','potencia','torque'). Use a self-join only when you must COMBINE campos in one expression (ratio, difference).
 11. Price campos: 'preco_sugerido' (preco de fabrica) and 'preco_fipe' (Tabela FIPE, referencia oficial). For price questions, prefer campo IN ('preco_sugerido','preco_fipe').
 
 EXAMPLE — "Qual a potencia da Ranger Raptor?":
@@ -192,7 +197,23 @@ SELECT marca, modelo, versao, campo, valor, unidade, fonte_url, extraido_em
 FROM vehicle_spec
 WHERE mercado = 'BR' AND marca = 'Ford' AND modelo = 'Ranger'
   AND campo IN ('preco_sugerido', 'potencia', 'torque')
-ORDER BY versao, campo;"""
+ORDER BY versao, campo;
+
+EXAMPLE — "Qual versao da Ranger tem o melhor custo por cavalo?" (combining two campos => self-join, every alias declared in FROM/JOIN):
+SELECT pot.marca, pot.modelo, pot.versao,
+       pr.valor AS preco, pot.valor AS potencia_cv,
+       ROUND(CAST(REPLACE(pr.valor, '.', '') AS NUMERIC)
+             / NULLIF(CAST(pot.valor AS NUMERIC), 0), 0) AS custo_por_cv,
+       pr.fonte_url, pr.extraido_em
+FROM vehicle_spec pot
+JOIN vehicle_spec pr
+  ON pr.marca = pot.marca AND pr.modelo = pot.modelo
+ AND pr.mercado = pot.mercado
+ AND pr.versao ILIKE pot.versao || '%'
+WHERE pot.mercado = 'BR' AND pot.marca = 'Ford' AND pot.modelo = 'Ranger'
+  AND pot.campo = 'potencia'
+  AND pr.campo IN ('preco_sugerido', 'preco_fipe')
+ORDER BY custo_por_cv ASC;"""
 
 
 def sanitize_sql(sql: str) -> tuple[bool, str]:
@@ -214,8 +235,12 @@ def sanitize_sql(sql: str) -> tuple[bool, str]:
     return True, "OK"
 
 
-def generate_sql(question: str) -> str:
-    """Use LLM to generate SQL from a natural language question."""
+def generate_sql(question: str, failed_sql: str = None, db_error: str = None) -> str:
+    """Use LLM to generate SQL from a natural language question.
+
+    When failed_sql/db_error are given, asks the model to FIX the broken
+    query instead of starting from scratch (one-shot self-repair).
+    """
     try:
         from openai import OpenAI
 
@@ -226,12 +251,25 @@ def generate_sql(question: str) -> str:
     schema = get_schema_description()
     system_prompt = build_system_prompt(schema)
 
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": question},
+    ]
+    if failed_sql and db_error:
+        messages.append({"role": "assistant", "content": failed_sql})
+        messages.append({
+            "role": "user",
+            "content": (
+                f"That SQL failed with this PostgreSQL error:\n{db_error}\n\n"
+                "Fix the query. Remember: every alias referenced must be declared "
+                "in FROM/JOIN, and only vehicle_spec may be queried. "
+                "Respond ONLY with the corrected SQL."
+            ),
+        })
+
     response = client.chat.completions.create(
         model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": question},
-        ],
+        messages=messages,
         temperature=0,
         max_completion_tokens=500,
     )
@@ -263,20 +301,35 @@ def execute_query(question: str) -> QueryResult:
             error=reason,
         )
 
-    # Step 3: Execute
-    try:
-        with engine.connect() as conn:
-            result = conn.execute(text(sql))
-            columns = list(result.keys())
-            rows = [dict(zip(columns, row)) for row in result.fetchall()]
-    except Exception as e:
-        return QueryResult(
-            question=question,
-            sql_generated=sql,
-            data=[],
-            answer_text=f"Erro ao executar query: {str(e)}",
-            error=str(e),
-        )
+    # Step 3: Execute — with one self-repair attempt on failure (the LLM
+    # receives the PostgreSQL error and fixes its own query)
+    rows = None
+    for attempt in (1, 2):
+        try:
+            with engine.connect() as conn:
+                result = conn.execute(text(sql))
+                columns = list(result.keys())
+                rows = [dict(zip(columns, row)) for row in result.fetchall()]
+            break
+        except Exception as e:
+            if attempt == 2:
+                return QueryResult(
+                    question=question,
+                    sql_generated=sql,
+                    data=[],
+                    answer_text=f"Erro ao executar query: {str(e)}",
+                    error=str(e),
+                )
+            sql = generate_sql(question, failed_sql=sql, db_error=str(e)[:600])
+            is_safe, reason = sanitize_sql(sql)
+            if not is_safe:
+                return QueryResult(
+                    question=question,
+                    sql_generated=sql,
+                    data=[],
+                    answer_text=f"Query bloqueada por seguranca: {reason}",
+                    error=reason,
+                )
 
     # Step 4: Format answer
     if not rows:
