@@ -45,9 +45,13 @@ def main():
         print("\n[2/4] Loading REAL seed data (data/seed/real_seed.sql)...")
         with open(seed_path, encoding="utf-8") as f:
             # Strip psql-only meta-commands (\restrict / \unrestrict from
-            # pg_dump 16+) — they are not SQL and break the DB driver.
+            # pg_dump 16+) and the session-level search_path reset — set_config
+            # with is_local=false persists on the pooled connection and makes
+            # later unqualified queries (e.g. the scoring step) fail.
             seed_sql = "\n".join(
-                ln for ln in f.read().splitlines() if not ln.lstrip().startswith("\\")
+                ln for ln in f.read().splitlines()
+                if not ln.lstrip().startswith("\\")
+                and "set_config('search_path'" not in ln
             )
         with engine.begin() as conn:
             # Idempotent: clear before loading so re-runs don't conflict on the
