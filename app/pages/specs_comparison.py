@@ -91,6 +91,51 @@ FIELD_ORDER = [
 ]
 
 
+def _merge_price_only_rows(data: dict) -> dict:
+    """Fold price-only entries into the matching spec vehicle.
+
+    Sources name versions differently: specs say 'Raptor', FIPE says
+    'Raptor 3.0 V6 Bi-Turbo 4WD AUT.'. Keyed strictly by versao, the price
+    lands on a phantom vehicle and the real one shows no price. Match rule:
+    every token of the spec versao (ignoring tokens already in the modelo
+    name) must appear in the price versao. Token equality keeps 'Limited+'
+    distinct from 'Limited'. Unmatched price rows stay standalone.
+    """
+    def _tokens(s):
+        return [t for t in s.upper().replace(".", " ").split() if t]
+
+    for key in list(data.keys()):
+        campos = data[key]
+        if not campos or not all(c.startswith("preco") for c in campos):
+            continue  # has real specs — not a price-only phantom
+        marca, modelo, versao_preco = key
+        modelo_tokens = set(_tokens(modelo))
+        # pool includes the phantom's modelo: FIPE may split naming differently
+        # (specs: modelo='L200 Triton'/versao='Savana'; FIPE: modelo='Triton'/
+        # versao='L200 Savana 2.4...').
+        pool = set(_tokens(versao_preco)) | modelo_tokens
+        candidates = []
+        for k2, c2 in data.items():
+            if k2 == key or k2[0] != marca:
+                continue
+            if k2[1] != modelo and not (set(_tokens(k2[1])) & modelo_tokens):
+                continue  # modelos don't even share a token
+            if all(c.startswith("preco") for c in c2):
+                continue
+            spec_modelo_tokens = set(_tokens(k2[1])) | modelo_tokens
+            v_tokens = [t for t in _tokens(k2[2]) if t not in spec_modelo_tokens]
+            if v_tokens and set(v_tokens) <= pool:
+                candidates.append(k2)
+        if not candidates:
+            continue
+        # most specific versao wins (e.g. 'XL 4x4' over 'XL')
+        target = max(candidates, key=lambda k: len(k[2]))
+        for campo, val in campos.items():
+            data[target].setdefault(campo, val)
+        del data[key]
+    return data
+
+
 def _load_live_data() -> dict:
     """Load all verified specs from database."""
     with engine.connect() as conn:
@@ -107,7 +152,7 @@ def _load_live_data() -> dict:
         if key not in data:
             data[key] = {}
         data[key][row.campo] = (row.valor or "N/D", row.unidade or "")
-    return data
+    return _merge_price_only_rows(data)
 
 
 def _format_value(valor: str, unidade: str) -> str:
