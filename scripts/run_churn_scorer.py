@@ -10,7 +10,6 @@ updates churn_score and score_calculado_em columns.
 import argparse
 import os
 import sys
-from datetime import date, datetime
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
